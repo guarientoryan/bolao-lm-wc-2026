@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bolão Copa do Mundo 2026</title>
+<style>
+  :root{
+    --green:#0a8f3c; --green-dark:#066029; --gold:#ffcc00; --bg:#0f1410;
+    --card:#1a2118; --text:#f2f2f2; --muted:#9aa39a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--text);
+  }
+  header{
+    background:linear-gradient(135deg,var(--green),var(--green-dark));
+    padding:18px 16px; text-align:center;
+  }
+  header h1{margin:0;font-size:1.3rem;}
+  header p{margin:4px 0 0;font-size:.8rem;color:#dfffe9;}
+  .tabs{display:flex; background:#10160f; position:sticky; top:0; z-index:10;}
+  .tab{flex:1;padding:12px;text-align:center;cursor:pointer;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;}
+  .tab.active{color:var(--gold);border-bottom:3px solid var(--gold);}
+  .container{padding:14px;max-width:600px;margin:0 auto;}
+  .card{background:var(--card);border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 2px 6px rgba(0,0,0,.3);}
+  .game-header{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-bottom:8px;}
+  .teams{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;}
+  .team{flex:1;text-align:center;font-weight:600;font-size:.95rem;}
+  .score-input{width:50px;font-size:1.2rem;text-align:center;padding:6px;border-radius:8px;border:1px solid #333;background:#0c100b;color:var(--text);}
+  .vs{color:var(--gold);font-weight:bold;padding:0 4px;}
+  label.small{display:block;font-size:.78rem;color:var(--muted);margin:8px 0 4px;}
+  input[type=text],input[type=password]{width:100%;padding:8px;border-radius:8px;border:1px solid #333;background:#0c100b;color:var(--text);font-size:.95rem;}
+  .name-bar{display:flex;gap:8px;margin-bottom:14px;}
+  .name-bar input{flex:1;}
+  .login-wrap{max-width:380px;margin:40px auto;padding:0 14px;}
+  .login-wrap h2{margin-top:0;text-align:center;color:var(--gold);}
+  .login-wrap label.small{margin-top:12px;}
+  .login-error{font-size:.8rem;color:#ff8080;margin-top:8px;min-height:1.2em;}
+  .userbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:.85rem;color:var(--muted);}
+  .userbar b{color:var(--gold);}
+  .logout-link{cursor:pointer;text-decoration:underline;}
+  button{
+    background:var(--gold);color:#1a1a1a;border:none;border-radius:8px;
+    padding:10px 16px;font-weight:700;cursor:pointer;font-size:.9rem;
+  }
+  button.secondary{background:#2a3328;color:var(--text);}
+  .save-row{display:flex;justify-content:flex-end;margin-top:8px;}
+  .saved-tag{font-size:.75rem;color:#7be38a;margin-left:auto;align-self:center;}
+  .ranking-row{display:flex;justify-content:space-between;align-items:center;background:var(--card);padding:12px;border-radius:10px;margin-bottom:8px;}
+  .pos{font-weight:800;color:var(--gold);width:28px;}
+  .rname{flex:1;font-weight:600;}
+  .pts{font-weight:800;color:#7be38a;}
+  .admin-toggle{font-size:.75rem;color:var(--muted);text-align:center;margin:18px 0 6px;cursor:pointer;text-decoration:underline;}
+  .rules{font-size:.78rem;color:var(--muted);background:var(--card);padding:10px;border-radius:10px;margin-bottom:12px;line-height:1.5;}
+  .badge{font-size:.7rem;background:#2a3328;padding:2px 8px;border-radius:20px;color:var(--gold);}
+  .empty{text-align:center;color:var(--muted);padding:30px 10px;}
+  .result-set{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px;}
+  .pitch-wrap{margin-top:8px;}
+  .pitch-team-label{font-size:.78rem;font-weight:700;color:var(--gold);margin:6px 0 4px;}
+  .pitch{
+    position:relative;
+    aspect-ratio: 3 / 4;
+    background:repeating-linear-gradient(180deg,#1c5c2e,#1c5c2e 30px,#1f6633 30px,#1f6633 60px);
+    border:2px solid #3a8a4d; border-radius:8px; padding:10px 6px;
+    display:flex; flex-direction:column; gap:6px; justify-content:space-between;
+    overflow:hidden;
+  }
+  .pitch-lines{
+    position:absolute; top:0; left:0; width:100%; height:100%;
+    pointer-events:none; z-index:0;
+  }
+  .pitch-row, .pitch-team-label{position:relative; z-index:1;}
+  .pitch-row{display:flex; justify-content:space-around; gap:4px; flex-wrap:wrap;}
+  .player-token{
+    background:rgba(0,0,0,.45); border:1px solid #4a6e4a; color:var(--text);
+    border-radius:8px; padding:4px 6px; font-size:.68rem; text-align:center;
+    cursor:pointer; min-width:54px; line-height:1.2;
+  }
+  .player-token .pos{display:block;font-size:.6rem;color:var(--gold);}
+  .player-token.selected{background:var(--gold); color:#1a1a1a; border-color:var(--gold); font-weight:700;}
+  .no-goal-btn{
+    width:100%; margin-top:8px; padding:8px; border-radius:8px; border:1px dashed #555;
+    background:transparent; color:var(--muted); cursor:pointer; font-size:.8rem;
+  }
+  .no-goal-btn.selected{background:var(--gold); color:#1a1a1a; border-color:var(--gold); font-weight:700;}
+  .reserves{font-size:.7rem;color:var(--muted);margin-top:4px;}
+  .reserves .player-token{min-width:auto;}
+  .status{font-size:.75rem;margin-top:6px;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🏆 Bolão Copa do Mundo 2026</h1>
+  <p>Faça seus palpites e acompanhe o ranking dos amigos</p>
+</header>
+
+<!-- TELA DE LOGIN -->
+<div id="loginScreen" class="login-wrap">
+  <div id="firebaseWarning" class="rules" style="display:none;border:1px solid #ff8080;color:#ffb3b3;margin-bottom:12px;">
+    ⚠️ <b>Firebase não configurado.</b> Abra o arquivo HTML em um editor de texto, encontre o objeto <code>firebaseConfig</code>
+    perto do início do <code>&lt;script&gt;</code> e preencha com os dados do seu projeto Firebase
+    (console.firebase.google.com → Realtime Database). Sem isso, login, palpites e ranking não serão salvos.
+  </div>
+  <div class="card">
+    <h2>🔐 Entrar no bolão</h2>
+    <label class="small">Seu nome</label>
+    <input type="text" id="loginName" placeholder="Ex: João">
+    <label class="small">Senha</label>
+    <input type="password" id="loginPass" placeholder="Crie ou digite sua senha">
+    <div class="save-row"><button id="loginBtn">Entrar</button></div>
+    <div class="login-error" id="loginMsg"></div>
+    <div class="rules" style="margin-top:14px;">
+      Na primeira vez, digite um nome e crie uma senha — ela será cadastrada.
+      Da próxima vez, use o mesmo nome e a mesma senha para acessar seus palpites.
+      Cada pessoa só vê os próprios palpites; o ranking é compartilhado com todos.
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appWrap" style="display:none;">
+
+  <div class="tabs">
+    <div class="tab active" data-tab="palpites">Palpites</div>
+    <div class="tab" data-tab="ranking">Ranking</div>
+    <div class="tab" data-tab="admin-all" id="tabAdminAll" style="display:none;">Todos os Palpites</div>
+  </div>
+
+  <div class="container">
+
+    <div class="userbar">
+      <span>Logado como <b id="currentUserLabel"></b></span>
+      <span class="logout-link" id="logoutBtn">Sair</span>
+    </div>
+
+    <!-- PALPITES TAB -->
+    <div id="tab-palpites">
+      <div class="rules">
+        <b>Como pontua:</b><br>
+        ⚽ Acertou o placar exato: <b>5 pts</b><br>
+        🎯 Acertou só o resultado (vitória/empate, placar errado): <b>2 pts</b><br>
+        🥇 Acertou quem fez o 1º gol da partida: <b>3 pts</b><br>
+        <span class="muted">Se o jogo terminar 0x0, ninguém ganha pontos do 1º gol.</span>
+      </div>
+
+      <div id="gamesList"></div>
+    </div>
+
+    <!-- RANKING TAB -->
+    <div id="tab-ranking" style="display:none;">
+      <div id="rankingList"></div>
+    </div>
+
+    <!-- TODOS OS PALPITES (somente admin) -->
+    <div id="tab-admin-all" style="display:none;">
+      <div class="rules">👁️ Como administrador, você pode ver os palpites de todos os participantes.</div>
+      <div id="allPredsList"></div>
+    </div>
+
+    <div class="admin-toggle" id="adminToggle" style="display:none;">⚙️ Área do administrador (lançar resultados)</div>
+    <div id="adminPanel" style="display:none;"></div>
+
+  </div>
+</div>
+
+
+
+
+<!-- ====== FIREBASE (banco de dados gratuito p/ rodar fora do Claude.ai) ====== -->
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-database-compat.js"></script>
+
+<script>
+// =========================================================================
+// CONFIGURAÇÃO DO FIREBASE
+// 1) Crie um projeto gratuito em https://console.firebase.google.com
+// 2) Ative o "Realtime Database" (modo de teste)
+// 3) Em "Configurações do projeto" > "Geral" > "Seus apps", crie um app Web
+//    e copie os valores abaixo (apiKey, databaseURL, projectId, etc).
+// =========================================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyDVb4aiLczCufxo-mayBIsoOVtbbdXfy5A",
+    authDomain: "bolao-a5bae.firebaseapp.com",
+    databaseURL: "https://bolao-a5bae-default-rtdb.firebaseio.com",
+    projectId: "bolao-a5bae",
+    storageBucket: "bolao-a5bae.firebasestorage.app",
+    messagingSenderId: "577935917534",
+    appId: "1:577935917534:web:223722e0de2b3a04d81d4f"
+  };
+
+const FB_ROOT = "bolao2026";
+let fbReady = false;
+try{
+  if(firebaseConfig.apiKey && firebaseConfig.apiKey !== "COLE_AQUI_SUA_API_KEY"){
+    firebase.initializeApp(firebaseConfig);
+    fbReady = true;
+  }
+}catch(e){
+  console.error("Erro ao iniciar Firebase:", e);
+}
+
+// Shim que imita a API window.storage usada pelo resto do código,
+// mas gravando os dados no Firebase Realtime Database.
+window.storage = {
+  async get(key, shared){
+    if(!fbReady) throw new Error("Firebase não configurado. Edite firebaseConfig no início do arquivo.");
+    const snap = await firebase.database().ref(`${FB_ROOT}/${key}`).get();
+    if(!snap.exists()) return null;
+    return { key, value: snap.val(), shared: !!shared };
+  },
+  async set(key, value, shared){
+    if(!fbReady) throw new Error("Firebase não configurado. Edite firebaseConfig no início do arquivo.");
+    await firebase.database().ref(`${FB_ROOT}/${key}`).set(value);
+    return { key, value, shared: !!shared };
+  },
+  async delete(key, shared){
+    if(!fbReady) throw new Error("Firebase não configurado. Edite firebaseConfig no início do arquivo.");
+    await firebase.database().ref(`${FB_ROOT}/${key}`).remove();
+    return { key, deleted: true, shared: !!shared };
+  },
+  async list(prefix, shared){
+    if(!fbReady) throw new Error("Firebase não configurado. Edite firebaseConfig no início do arquivo.");
+    const ref = firebase.database().ref(FB_ROOT);
+    let query = ref.orderByKey();
+    if(prefix) query = query.startAt(prefix).endAt(prefix + "\uf8ff");
+    const snap = await query.get();
+    const keys = [];
+    snap.forEach(child => keys.push(child.key));
+    return { keys, prefix, shared: !!shared };
+  }
+};
+</script>
+
+<script>
+const STORAGE_PREFIX = "bolao2026";
+
+// Nome de usuário (em minúsculas, sem espaços/acentos) que terá acesso de administrador.
+// Para virar admin, cadastre-se na tela de login com o nome "admin" (a senha pode ser qualquer uma que você escolher).
+const ADMIN_SLUG = "admin";
+
+
+// ======= JOGOS DA COPA 2026 (carregados automaticamente da ESPN) =======
+let GAMES = [];
+
+const ESPN_LEAGUE = "fifa.world"; // Copa do Mundo FIFA
+// Período do torneio (ajuste se necessário)
+const ESPN_DATE_RANGE = "20260611-20260719";
+
+async function fetchEspnSchedule(){
+  const target = `https://site.api.espn.com/apis/site/v2/sports/soccer/${ESPN_LEAGUE}/scoreboard?dates=${ESPN_DATE_RANGE}`;
+  let data;
+  try{
+    const res = await fetch(target);
+    data = await res.json();
+  }catch(e){
+    // fallback via proxy CORS público
+    const proxyUrl = `https://corsproxy.io/?` + encodeURIComponent(target);
+    const res = await fetch(proxyUrl);
+    data = await res.json();
+  }
+  const games = [];
+  const results = {};
+
+  for(const ev of (data.events || [])){
+    const comp = ev.competitions[0];
+    const home = comp.competitors.find(c=>c.homeAway==="home");
+    const away = comp.competitors.find(c=>c.homeAway==="away");
+    const dt = new Date(ev.date);
+    const dateStr = dt.toLocaleString("pt-BR", { day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit" });
+
+    games.push({
+      id: ev.id,
+      date: dateStr,
+      group: ev.season?.slug || comp.notes?.[0]?.headline || "Copa 2026",
+      home: home.team.displayName,
+      away: away.team.displayName,
+      homeId: home.team.id,
+      awayId: away.team.id
+    });
+
+    const status = comp.status?.type?.state; // "pre" | "in" | "post"
+    if(status === "post"){
+      let scorer = "";
+      const goals = (comp.details || []).filter(d => d.type?.text === "Goal" || d.scoringPlay);
+      if(goals.length > 0){
+        scorer = goals[0].athletesInvolved?.[0]?.displayName
+              || goals[0].athletesInvolved?.[0]?.shortName
+              || "";
+      }
+      results[ev.id] = {
+        home: parseInt(home.score),
+        away: parseInt(away.score),
+        scorer
+      };
+    }
+  }
+  return { games, results };
+}
+// ========================================================================
+
+const PTS_EXACT = 5;
+const PTS_RESULT = 2;
+const PTS_SCORER = 3;
+
+// Mapa de nomes de seleções (ESPN) -> código ISO para bandeira
+const COUNTRY_CODES = {
+  "Brazil":"br","Brasil":"br","Argentina":"ar","Mexico":"mx","México":"mx",
+  "United States":"us","USA":"us","Canada":"ca","Canadá":"ca",
+  "France":"fr","Germany":"de","Alemanha":"de","Spain":"es","Espanha":"es",
+  "Portugal":"pt","England":"gb-eng","Italy":"it","Itália":"it",
+  "Netherlands":"nl","Holanda":"nl","Belgium":"be","Bélgica":"be",
+  "Croatia":"hr","Croácia":"hr","Uruguay":"uy","Uruguai":"uy",
+  "Colombia":"co","Colômbia":"co","Chile":"cl","Peru":"pe","Equador":"ec","Ecuador":"ec",
+  "Japan":"jp","Japão":"jp","South Korea":"kr","Coreia do Sul":"kr",
+  "Australia":"au","Austrália":"au","Saudi Arabia":"sa","Arábia Saudita":"sa",
+  "Qatar":"qa","Iran":"ir","Irã":"ir","Morocco":"ma","Marrocos":"ma",
+  "Senegal":"sn","Ghana":"gh","Gana":"gh","Cameroon":"cm","Camarões":"cm",
+  "Nigeria":"ng","Nigéria":"ng","Tunisia":"tn","Tunísia":"tn","Egypt":"eg","Egito":"eg",
+  "Algeria":"dz","Argélia":"dz","South Africa":"za","África do Sul":"za",
+  "Switzerland":"ch","Suíça":"ch","Poland":"pl","Polônia":"pl","Serbia":"rs","Sérvia":"rs",
+  "Denmark":"dk","Dinamarca":"dk","Sweden":"se","Suécia":"se","Norway":"no","Noruega":"no",
+  "Wales":"gb-wls","Scotland":"gb-sct","Ukraine":"ua","Ucrânia":"ua",
+  "Austria":"at","Áustria":"at","Czech Republic":"cz","Tchéquia":"cz",
+  "Turkey":"tr","Turquia":"tr","Russia":"ru","Rússia":"ru","Greece":"gr","Grécia":"gr",
+  "Costa Rica":"cr","Panama":"pa","Panamá":"pa","Jamaica":"jm","Honduras":"hn",
+  "New Zealand":"nz","Nova Zelândia":"nz","Paraguay":"py","Paraguai":"py",
+  "Venezuela":"ve","Bolivia":"bo","Bolívia":"bo","China":"cn","India":"in","Índia":"in",
+  "Iraq":"iq","Iraque":"iq","Jordan":"jo","Jordânia":"jo","UAE":"ae",
+  "Uzbekistan":"uz","Usbequistão":"uz","Curaçao":"cw","Haiti":"ht","Suriname":"sr",
+  "Cape Verde":"cv","Cabo Verde":"cv","DR Congo":"cd","RD Congo":"cd"
+};
+
+function flagImg(teamName){
+  const code = COUNTRY_CODES[teamName];
+  if(code) return `<img src="https://flagcdn.com/24x18/${code}.png" alt="${teamName}" style="vertical-align:middle;border-radius:2px;margin-right:4px;">`;
+  return "";
+}
+
+// busca o elenco completo do time (com posição) quando a escalação titular não saiu ainda
+const rosterCache = {};
+async function fetchFullRoster(teamId){
+  if(!teamId) return [];
+  if(rosterCache[teamId]) return rosterCache[teamId];
+  const target = `https://site.api.espn.com/apis/site/v2/sports/soccer/${ESPN_LEAGUE}/teams/${teamId}/roster`;
+  let data;
+  try{
+    const res = await fetch(target);
+    data = await res.json();
+  }catch(e){
+    try{
+      const res = await fetch(`https://corsproxy.io/?` + encodeURIComponent(target));
+      data = await res.json();
+    }catch(e2){
+      rosterCache[teamId] = [];
+      return [];
+    }
+  }
+  const players = [];
+  const groups = data.athletes || data.team?.athletes || [];
+  for(const g of groups){
+    const items = g.items || g.athletes || (Array.isArray(g) ? g : null);
+    if(items){
+      const posLabel = g.position?.name || g.position || "";
+      for(const p of items){
+        const athlete = p.athlete || p;
+        const name = athlete.displayName || athlete.fullName || athlete.shortName;
+        if(name){
+          players.push({ name, position: athlete.position?.abbreviation || p.position?.abbreviation || posLabel });
+        }
+      }
+    } else if(g.athlete || g.displayName){
+      const athlete = g.athlete || g;
+      const name = athlete.displayName || athlete.fullName;
+      if(name) players.push({ name, position: athlete.position?.abbreviation || "" });
+    }
+  }
+  if(players.length === 0){
+    console.warn(`Roster vazio para o time ${teamId}. Resposta da API:`, data);
+  }
+  rosterCache[teamId] = players;
+  return players;
+}
+
+// cache de prováveis escalações (rosters) por jogo
+const lineupCache = {};
+async function fetchLineup(game){
+  const gameId = game.id;
+  if(lineupCache[gameId]) return lineupCache[gameId];
+  const target = `https://site.api.espn.com/apis/site/v2/sports/soccer/${ESPN_LEAGUE}/summary?event=${gameId}`;
+  let data;
+  try{
+    const res = await fetch(target);
+    data = await res.json();
+  }catch(e){
+    try{
+      const res = await fetch(`https://corsproxy.io/?` + encodeURIComponent(target));
+      data = await res.json();
+    }catch(e2){
+      data = null;
+    }
+  }
+  let result = { home: [], away: [], full: false };
+  if(data){
+    const rosters = data.rosters || [];
+    for(const r of rosters){
+      const side = r.homeAway === "home" ? "home" : "away";
+      const players = (r.roster || [])
+        .filter(p => p.starter)
+        .map(p => ({ name: p.athlete?.displayName, position: p.position?.abbreviation || "" }))
+        .filter(p => p.name);
+      result[side] = players;
+    }
+  }
+
+  // se a escalação titular ainda não saiu, busca o elenco completo de cada seleção
+  if(result.home.length === 0 && result.away.length === 0){
+    const [homeFull, awayFull] = await Promise.all([
+      fetchFullRoster(game.homeId),
+      fetchFullRoster(game.awayId)
+    ]);
+    result = { home: homeFull, away: awayFull, full: true };
+  }
+
+  if(result.home.length === 0 && result.away.length === 0){
+    lineupCache[gameId] = null;
+    return null;
+  }
+  lineupCache[gameId] = result;
+  return result;
+}
+
+let currentUser = "";
+let isAdmin = false;
+
+function slug(s){ return s.toLowerCase().trim().replace(/\s+/g,"_").replace(/[^a-z0-9_]/g,""); }
+
+async function sha256Hex(str){
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+
+// ---------- Tabs ----------
+document.querySelectorAll(".tab").forEach(tab=>{
+  tab.addEventListener("click", ()=>{
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    tab.classList.add("active");
+    document.getElementById("tab-palpites").style.display = tab.dataset.tab==="palpites" ? "block":"none";
+    document.getElementById("tab-ranking").style.display = tab.dataset.tab==="ranking" ? "block":"none";
+    document.getElementById("tab-admin-all").style.display = tab.dataset.tab==="admin-all" ? "block":"none";
+    if(tab.dataset.tab==="ranking") renderRanking();
+    if(tab.dataset.tab==="admin-all") renderAllPredictions();
+  });
+});
+
+// ---------- Login / Cadastro ----------
+async function tentarLoginAutomatico(){
+  const savedName = localStorage.getItem(STORAGE_PREFIX + "_username");
+  const savedHash = localStorage.getItem(STORAGE_PREFIX + "_passhash");
+  if(!savedName || !savedHash) return false;
+  try{
+    const r = await window.storage.get(`user:${slug(savedName)}`, true);
+    if(r){
+      const u = JSON.parse(r.value);
+      if(u.passHash === savedHash){
+        currentUser = savedName;
+        isAdmin = (slug(savedName) === ADMIN_SLUG);
+        return true;
+      }
+    }
+  }catch(e){}
+  return false;
+}
+
+async function fazerLogin(){
+  const msg = document.getElementById("loginMsg");
+  const name = document.getElementById("loginName").value.trim();
+  const pass = document.getElementById("loginPass").value;
+  msg.textContent = "";
+
+  if(!name || !pass){
+    msg.textContent = "Preencha seu nome e sua senha.";
+    return;
+  }
+
+  if(!fbReady){
+    msg.textContent = "⚠️ O Firebase ainda não foi configurado. Edite o arquivo HTML e preencha o objeto firebaseConfig com os dados do seu projeto Firebase (veja o comentário no início do <script>).";
+    return;
+  }
+
+  const userKey = `user:${slug(name)}`;
+  const hash = await sha256Hex(pass);
+
+  let existing = null;
+  try{
+    const r = await window.storage.get(userKey, true);
+    if(r) existing = JSON.parse(r.value);
+  }catch(e){
+    // chave ainda não existe -> usuário novo, segue o fluxo normalmente
+  }
+
+  if(existing){
+    if(existing.passHash !== hash){
+      msg.textContent = "Senha incorreta para esse nome.";
+      return;
+    }
+  } else {
+    // primeiro acesso com esse nome: cadastra a senha
+    existing = { name, passHash: hash };
+    try{
+      const res1 = await window.storage.set(userKey, JSON.stringify(existing), true);
+      const res2 = await window.storage.set(`name:${slug(name)}`, name, true);
+      if(!res1 || !res2){
+        msg.textContent = "Erro ao cadastrar (armazenamento recusou salvar). Tente novamente em alguns segundos.";
+        return;
+      }
+    }catch(e){
+      console.error("Erro no cadastro:", e);
+      msg.textContent = "Erro ao cadastrar: " + (e?.message || e);
+      return;
+    }
+  }
+
+  currentUser = name;
+  isAdmin = (slug(name) === ADMIN_SLUG);
+  localStorage.setItem(STORAGE_PREFIX + "_username", name);
+  localStorage.setItem(STORAGE_PREFIX + "_passhash", hash);
+  await entrarNoApp();
+}
+
+document.getElementById("loginBtn").addEventListener("click", fazerLogin);
+document.getElementById("loginPass").addEventListener("keydown", (e)=>{ if(e.key==="Enter") fazerLogin(); });
+document.getElementById("loginName").addEventListener("keydown", (e)=>{ if(e.key==="Enter") fazerLogin(); });
+
+document.getElementById("logoutBtn").addEventListener("click", ()=>{
+  localStorage.removeItem(STORAGE_PREFIX + "_username");
+  localStorage.removeItem(STORAGE_PREFIX + "_passhash");
+  location.reload();
+});
+
+async function entrarNoApp(){
+  document.getElementById("loginScreen").style.display = "none";
+  document.getElementById("appWrap").style.display = "block";
+  document.getElementById("currentUserLabel").textContent = currentUser;
+  if(isAdmin){
+    document.getElementById("tabAdminAll").style.display = "block";
+    document.getElementById("adminToggle").style.display = "block";
+  }
+  await loadAndRenderGames();
+}
+
+// ---------- Render jogos ----------
+async function loadAndRenderGames(){
+  const list = document.getElementById("gamesList");
+  list.innerHTML = "";
+
+  if(!GAMES || GAMES.length === 0){
+    list.innerHTML = `<div class="empty">⚠️ Nenhum jogo foi carregado da ESPN. Veja o console (F12) pra detalhes do erro.</div>`;
+    return;
+  }
+
+  // filtra jogos do dia de hoje; se não houver nenhum, mostra os próximos
+  const todayStr = new Date().toLocaleDateString("pt-BR");
+  let gamesToShow = GAMES.filter(g => g.date.startsWith(todayStr));
+  if(gamesToShow.length === 0){
+    gamesToShow = GAMES.slice(0, 10);
+    list.innerHTML = `<div class="empty" style="padding:8px;">Nenhum jogo hoje. Mostrando os próximos jogos:</div>`;
+  }
+
+  for(const game of gamesToShow){
+    let pred = null;
+    try{
+      const r = await window.storage.get(`pred:${slug(currentUser)}:${game.id}`, true);
+      if(r) pred = JSON.parse(r.value);
+    }catch(e){}
+
+    let result = null;
+    try{
+      const r = await window.storage.get(`result:${game.id}`, true);
+      if(r) result = JSON.parse(r.value);
+    }catch(e){}
+
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <div class="game-header">
+        <span>${game.group} • ${game.date}</span>
+        ${result ? '<span class="badge">Resultado lançado</span>' : ''}
+      </div>
+      <div class="teams">
+        <div class="team">${flagImg(game.home)}${game.home}</div>
+        <input type="number" min="0" class="score-input" id="home-${game.id}" value="${pred?pred.home:''}" placeholder="0">
+        <div class="vs">x</div>
+        <input type="number" min="0" class="score-input" id="away-${game.id}" value="${pred?pred.away:''}" placeholder="0">
+        <div class="team">${flagImg(game.away)}${game.away}</div>
+      </div>
+      <label class="small">Quem marca o 1º gol da partida?</label>
+      <input type="hidden" id="scorer-${game.id}" value="${pred?pred.scorer:''}">
+      <div id="pitch-${game.id}"><div class="empty" style="padding:10px;">Carregando jogadores...</div></div>
+      ${result ? `<div class="status">📊 Resultado real: ${result.home} x ${result.away}${result.scorer?` • 1º gol: ${result.scorer}`:''}${pred?` — Você fez ${calcPoints(pred,result).total} pts</div>`:''}` : ''}
+      ${result ? '' : `<div class="save-row"><span class="saved-tag" id="saved-${game.id}"></span><button data-id="${game.id}">Salvar palpite</button></div>`}
+    `;
+    list.appendChild(card);
+
+    // carrega a provável escalação (ou elenco completo) e desenha o campo
+    fetchLineup(game).then(lineup => {
+      const wrap = document.getElementById(`pitch-${game.id}`);
+      const hidden = document.getElementById(`scorer-${game.id}`);
+      if(!wrap || !hidden) return;
+
+      if(!lineup){
+        wrap.innerHTML = `<div class="empty" style="padding:10px;">Elenco indisponível</div>`;
+        return;
+      }
+
+      const POS_ORDER = ["GK","DEF","MID","FWD"];
+      const POS_PT = {
+        G:"GOL", GK:"GOL",
+        D:"ZAG", DF:"ZAG", CB:"ZAG", LB:"LAT", RB:"LAT", WB:"LAT", "LWB":"LAT", "RWB":"LAT",
+        M:"MEI", MF:"MEI", CM:"MEI", DM:"VOL", AM:"MEI", LM:"MEI", RM:"MEI",
+        F:"ATA", FW:"ATA", ST:"ATA", CF:"ATA", LW:"ATA", RW:"ATA"
+      };
+      function posPt(pos, groupK){
+        const code = (pos||"").toUpperCase();
+        if(POS_PT[code]) return POS_PT[code];
+        const fallback = { GK:"GOL", DEF:"ZAG", MID:"MEI", FWD:"ATA" };
+        return fallback[groupK] || "";
+      }
+      function groupKey(pos){
+        const p = (pos||"").toUpperCase();
+        if(p.startsWith("G")) return "GK";
+        if(p.startsWith("D")) return "DEF";
+        if(p.startsWith("M")) return "MID";
+        if(p.startsWith("F") || p.startsWith("S") || p==="ST") return "FWD";
+        return "OTHER";
+      }
+
+      function buildTeam(players, teamName, flipRows){
+        const groups = { GK:[], DEF:[], MID:[], FWD:[], OTHER:[] };
+        players.forEach(p => groups[groupKey(p.position)].push(p));
+        let order = POS_ORDER.slice();
+        if(flipRows) order = order.slice().reverse(); // ataque do "away" fica embaixo, perto do meio
+        const rowsHtml = order.map(k => {
+          if(groups[k].length === 0) return "";
+          const tokens = groups[k].map(p => `
+            <div class="player-token" data-name="${p.name}">
+              ${p.name}<span class="pos">${posPt(p.position, k)}</span>
+            </div>`).join("");
+          return `<div class="pitch-row">${tokens}</div>`;
+        }).join("");
+        const reservesHtml = groups.OTHER.length ? `
+          <div class="reserves">Outros: ${groups.OTHER.map(p=>`<span class="player-token" data-name="${p.name}">${p.name}</span>`).join(" ")}</div>` : "";
+        return `
+          <div class="pitch-team-label">${flagImg(teamName)}${teamName}${lineup.full?' (elenco completo)':''}</div>
+          <div class="pitch">
+            <svg class="pitch-lines" viewBox="0 0 300 400" preserveAspectRatio="none">
+              <g fill="none" stroke="#ffffff" stroke-opacity="0.6" stroke-width="2">
+                <rect x="3" y="3" width="294" height="394"/>
+                <line x1="3" y1="200" x2="297" y2="200"/>
+                <circle cx="150" cy="200" r="45"/>
+                <circle cx="150" cy="200" r="2.5" fill="#ffffff"/>
+                <rect x="65" y="3" width="170" height="58"/>
+                <rect x="115" y="3" width="70" height="22"/>
+                <circle cx="150" cy="78" r="2.5" fill="#ffffff"/>
+                <path d="M108,61 A42,42 0 0 0 192,61"/>
+                <rect x="65" y="339" width="170" height="58"/>
+                <rect x="115" y="375" width="70" height="22"/>
+                <circle cx="150" cy="322" r="2.5" fill="#ffffff"/>
+                <path d="M108,339 A42,42 0 0 1 192,339"/>
+              </g>
+            </svg>
+            ${rowsHtml}
+          </div>
+          ${reservesHtml}
+        `;
+      }
+
+      let html = `<div class="pitch-wrap">`;
+      if(lineup.home.length) html += buildTeam(lineup.home, game.home, false);
+      if(lineup.away.length) html += buildTeam(lineup.away, game.away, true);
+      html += `<button type="button" class="no-goal-btn" data-name="ninguém">⚽ Ninguém marca (0x0)</button>`;
+      html += `</div>`;
+      wrap.innerHTML = html;
+
+      // marca seleção atual (se houver)
+      function applySelection(name){
+        wrap.querySelectorAll(".player-token, .no-goal-btn").forEach(el=>{
+          const isSel = el.dataset.name === name;
+          el.classList.toggle("selected", isSel);
+          const ballSpan = el.querySelector(".ball-mark");
+          if(isSel){
+            if(!ballSpan){
+              const span = document.createElement("span");
+              span.className = "ball-mark";
+              span.textContent = " ⚽";
+              el.appendChild(span);
+            }
+          } else if(ballSpan){
+            ballSpan.remove();
+          }
+        });
+        hidden.value = name;
+      }
+      if(hidden.value) applySelection(hidden.value);
+
+      wrap.querySelectorAll(".player-token, .no-goal-btn").forEach(el=>{
+        el.addEventListener("click", ()=> applySelection(el.dataset.name));
+      });
+    });
+  }
+
+  list.querySelectorAll("button[data-id]").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      const id = btn.dataset.id;
+      const home = document.getElementById(`home-${id}`).value;
+      const away = document.getElementById(`away-${id}`).value;
+      const scorer = document.getElementById(`scorer-${id}`).value.trim();      if(home==="" || away===""){ alert("Preencha o placar!"); return; }
+      const pred = { home: parseInt(home), away: parseInt(away), scorer };
+      await window.storage.set(`pred:${slug(currentUser)}:${id}`, JSON.stringify(pred), true);
+      await window.storage.set(`name:${slug(currentUser)}`, currentUser, true);
+      document.getElementById(`saved-${id}`).textContent = "✅ Salvo!";
+      setTimeout(()=>{ const el=document.getElementById(`saved-${id}`); if(el) el.textContent=""; }, 2000);
+    });
+  });
+}
+
+// ---------- Cálculo de pontos ----------
+function calcPoints(pred, result){
+  let total = 0, breakdown = [];
+  if(pred.home === result.home && pred.away === result.away){
+    total += PTS_EXACT; breakdown.push(`Placar exato +${PTS_EXACT}`);
+  } else {
+    const predRes = Math.sign(pred.home - pred.away);
+    const realRes = Math.sign(result.home - result.away);
+    if(predRes === realRes){ total += PTS_RESULT; breakdown.push(`Resultado certo +${PTS_RESULT}`); }
+  }
+  if(result.scorer && result.scorer.trim()!==""){
+    if(pred.scorer && pred.scorer.trim().toLowerCase() === result.scorer.trim().toLowerCase()){
+      total += PTS_SCORER; breakdown.push(`1º gol certo +${PTS_SCORER}`);
+    }
+  }
+  return { total, breakdown };
+}
+
+// ---------- Ranking ----------
+async function renderRanking(){
+  const container = document.getElementById("rankingList");
+  container.innerHTML = `<div class="empty">Carregando ranking...</div>`;
+
+  // pega lista de nomes
+  let names = [];
+  try{
+    const r = await window.storage.list("name:", true);
+    if(r && r.keys){
+      for(const k of r.keys){
+        const v = await window.storage.get(k, true);
+        if(v) names.push(v.value);
+      }
+    }
+  }catch(e){}
+
+  if(names.length===0){
+    container.innerHTML = `<div class="empty">Ninguém fez palpites ainda 🙃</div>`;
+    return;
+  }
+
+  // pega resultados
+  const results = {};
+  for(const game of GAMES){
+    try{
+      const r = await window.storage.get(`result:${game.id}`, true);
+      if(r) results[game.id] = JSON.parse(r.value);
+    }catch(e){}
+  }
+
+  const scores = [];
+  for(const name of names){
+    let total = 0;
+    for(const game of GAMES){
+      if(!results[game.id]) continue;
+      try{
+        const r = await window.storage.get(`pred:${slug(name)}:${game.id}`, true);
+        if(r){
+          const pred = JSON.parse(r.value);
+          total += calcPoints(pred, results[game.id]).total;
+        }
+      }catch(e){}
+    }
+    scores.push({ name, total });
+  }
+
+  scores.sort((a,b)=> b.total - a.total);
+
+  container.innerHTML = "";
+  scores.forEach((s,i)=>{
+    const row = document.createElement("div");
+    row.className = "ranking-row";
+    row.innerHTML = `
+      <div class="pos">${i+1}º</div>
+      <div class="rname">${s.name}</div>
+      <div class="pts">${s.total} pts</div>
+    `;
+    container.appendChild(row);
+  });
+}
+
+// ---------- Todos os palpites (somente admin) ----------
+async function renderAllPredictions(){
+  const container = document.getElementById("allPredsList");
+
+  if(!isAdmin){
+    container.innerHTML = `<div class="empty">Acesso restrito ao administrador.</div>`;
+    return;
+  }
+
+  container.innerHTML = `<div class="empty">Carregando palpites de todos...</div>`;
+
+  // pega lista de nomes cadastrados
+  let names = [];
+  try{
+    const r = await window.storage.list("name:", true);
+    if(r && r.keys){
+      for(const k of r.keys){
+        const v = await window.storage.get(k, true);
+        if(v) names.push(v.value);
+      }
+    }
+  }catch(e){}
+
+  if(names.length===0){
+    container.innerHTML = `<div class="empty">Ninguém fez palpites ainda 🙃</div>`;
+    return;
+  }
+
+  names.sort((a,b)=> a.localeCompare(b, "pt-BR"));
+
+  container.innerHTML = "";
+  for(const name of names){
+    const card = document.createElement("div");
+    card.className = "card";
+
+    let rowsHtml = "";
+    for(const game of GAMES){
+      let pred = null;
+      try{
+        const r = await window.storage.get(`pred:${slug(name)}:${game.id}`, true);
+        if(r) pred = JSON.parse(r.value);
+      }catch(e){}
+      if(!pred) continue;
+
+      rowsHtml += `
+        <div class="game-header" style="margin-top:8px;">
+          <span>${flagImg(game.home)}${game.home} <b>${pred.home} x ${pred.away}</b> ${game.away}${flagImg(game.away)}</span>
+        </div>
+        ${pred.scorer ? `<div style="font-size:.75rem;color:var(--muted);">⚽ 1º gol: ${pred.scorer}</div>` : ""}
+      `;
+    }
+
+    card.innerHTML = `
+      <div style="font-weight:800;color:var(--gold);margin-bottom:4px;">${name}</div>
+      ${rowsHtml || '<div class="empty" style="padding:6px;">Ainda não fez nenhum palpite</div>'}
+    `;
+    container.appendChild(card);
+  }
+}
+
+// ---------- Painel admin ----------
+document.getElementById("adminToggle").addEventListener("click", async ()=>{
+  const panel = document.getElementById("adminPanel");
+  if(panel.style.display === "block"){
+    panel.style.display = "none";
+    return;
+  }
+  panel.style.display = "block";
+  panel.innerHTML = `<div class="rules">⚠️ Aqui você lança o resultado real de cada jogo (placar e quem fez o primeiro gol). Isso atualiza a pontuação de todo mundo automaticamente. Os dados são compartilhados entre todos que acessarem este app.</div>`;
+
+  for(const game of GAMES){
+    let result = null;
+    try{
+      const r = await window.storage.get(`result:${game.id}`, true);
+      if(r) result = JSON.parse(r.value);
+    }catch(e){}
+
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <div class="game-header"><span>${game.group} • ${game.date}</span></div>
+      <div class="teams">
+        <div class="team">${game.home}</div>
+        <input type="number" min="0" class="score-input" id="adm-home-${game.id}" value="${result?result.home:''}">
+        <div class="vs">x</div>
+        <input type="number" min="0" class="score-input" id="adm-away-${game.id}" value="${result?result.away:''}">
+        <div class="team">${game.away}</div>
+      </div>
+      <label class="small">Quem fez o 1º gol da partida (deixe vazio se 0x0)</label>
+      <input type="text" id="adm-scorer-${game.id}" value="${result?(result.scorer||''):''}">
+      <div class="save-row"><button class="secondary" data-id="${game.id}">Salvar resultado</button></div>
+    `;
+    panel.appendChild(card);
+  }
+
+  panel.querySelectorAll("button[data-id]").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      const id = btn.dataset.id;
+      const home = document.getElementById(`adm-home-${id}`).value;
+      const away = document.getElementById(`adm-away-${id}`).value;
+      const scorer = document.getElementById(`adm-scorer-${id}`).value.trim();
+      if(home==="" || away===""){ alert("Preencha o placar!"); return; }
+      const result = { home: parseInt(home), away: parseInt(away), scorer };
+      await window.storage.set(`result:${id}`, JSON.stringify(result), true);
+      alert("Resultado salvo! O ranking será atualizado.");
+      loadAndRenderGames();
+    });
+  });
+});
+
+// ---------- Inicialização ----------
+async function init(){
+  if(!fbReady){
+    document.getElementById("firebaseWarning").style.display = "block";
+  }
+
+  document.getElementById("gamesList").innerHTML = `<div class="empty">Carregando jogos da Copa...</div>`;
+  try{
+    const { games, results } = await fetchEspnSchedule();
+    GAMES = games;
+
+    // salva automaticamente os resultados que já saíram
+    if(fbReady){
+      for(const id of Object.keys(results)){
+        await window.storage.set(`result:${id}`, JSON.stringify(results[id]), true);
+      }
+    }
+  }catch(e){
+    console.error("Erro ao buscar jogos da ESPN:", e);
+    document.getElementById("gamesList").innerHTML =
+      `<div class="empty">⚠️ Não foi possível carregar os jogos da Copa agora. Tente recarregar a página.</div>`;
+  }
+
+  const autoLogado = await tentarLoginAutomatico();
+  if(autoLogado){
+    await entrarNoApp();
+  } else {
+    document.getElementById("loginScreen").style.display = "block";
+  }
+}
+
+init();
+</script>
+
+</body>
+</html>
