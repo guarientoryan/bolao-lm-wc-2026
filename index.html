@@ -3,68 +3,489 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a140a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Bolão Copa do Mundo 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --green:#0a8f3c; --green-dark:#066029; --gold:#ffcc00; --bg:#0f1410;
-    --card:#1a2118; --text:#f2f2f2; --muted:#9aa39a;
+    --green:#0a8f3c; --green-dark:#066029; --gold:#ffcc00; --bg:transparent;
+    --card:rgba(10,18,10,0.55);
+    --card-border:rgba(255,255,255,0.14);
+    --text:#f2f2f2; --muted:#b0c4b0;
+    --blur: blur(28px) saturate(160%);
+    --blur-bg: rgba(10,18,10,0.50);
+    --radius:20px; --radius-sm:14px; --radius-lg:28px;
+    --glass-bg: rgba(10,18,10,0.55);
+    --glass-border: rgba(255,255,255,0.14);
+    --glass-shadow: 0 8px 32px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.14);
   }
   *{box-sizing:border-box;}
+  html{
+    background-color:#0a140a;
+  }
   body{
-    margin:0; font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-    background:var(--bg); color:var(--text);
+    margin:0; font-family:'Manrope',-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background-color:#0a140a;
+    background-image: url('https://i.redd.it/vwdxofg2z77a1.png');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color:var(--text);
+  }
+  @media(max-width:600px){
+    body{
+      background-image: url('https://pbs.twimg.com/media/HKc-JM7WkAACtO0?format=jpg&name=large');
+    }
   }
   header{
-    background:linear-gradient(135deg,var(--green),var(--green-dark));
-    padding:18px 16px; text-align:center;
+    background: linear-gradient(160deg, rgba(5,14,5,0.72) 0%, rgba(10,20,10,0.60) 100%);
+    backdrop-filter: blur(32px) saturate(160%);
+    -webkit-backdrop-filter: blur(32px) saturate(160%);
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.14);
+    padding:20px 16px; text-align:center;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
   }
-  header h1{margin:0;font-size:1.3rem;}
+  header h1{margin:6px 0 0;font-size:1.3rem;}
   header p{margin:4px 0 0;font-size:.8rem;color:#dfffe9;}
-  .tabs{display:flex; background:#10160f; position:sticky; top:0; z-index:10;}
-  .tab{flex:1;padding:12px;text-align:center;cursor:pointer;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;}
-  .tab.active{color:var(--gold);border-bottom:3px solid var(--gold);}
+  .tabs{
+    display:flex;
+    background: linear-gradient(180deg, rgba(8,16,8,0.75) 0%, rgba(5,12,5,0.85) 100%);
+    backdrop-filter: blur(32px) saturate(160%);
+    -webkit-backdrop-filter: blur(32px) saturate(160%);
+    position:fixed; left:0; right:0; bottom:0; z-index:40;
+    border-top:1px solid rgba(255,255,255,0.12);
+    padding-bottom:env(safe-area-inset-bottom);
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.12);
+  }
+  .tab{
+    flex:1;padding:8px 4px 10px;text-align:center;cursor:pointer;font-weight:700;
+    color:var(--muted);border-top:3px solid transparent;transition:color .2s ease, border-color .2s ease;
+    display:flex;flex-direction:column;align-items:center;gap:2px;
+    font-size:.68rem; line-height:1.2;
+  }
+  .tab .tab-icon{font-size:1.25rem;line-height:1;}
+  .tab .tab-icon-img{width:22px;height:22px;object-fit:contain;}
+  .tab.active{color:var(--gold);border-top:3px solid var(--gold);}
+  body.has-bottom-nav{padding-bottom:78px;}
   .container{padding:14px;max-width:600px;margin:0 auto;}
-  .card{background:var(--card);border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 2px 6px rgba(0,0,0,.3);}
+  .card{
+    background: linear-gradient(135deg, rgba(10,20,10,0.68) 0%, rgba(5,14,5,0.75) 100%);
+    backdrop-filter: blur(28px) saturate(160%);
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius:var(--radius);
+    padding:14px;
+    margin-bottom:12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.14);
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before{
+    content:'';
+    position:absolute; top:0; left:0; right:0; height:1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.20), transparent);
+    pointer-events:none;
+  }
   .game-header{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-bottom:8px;}
   .teams{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;}
   .team{flex:1;text-align:center;font-weight:600;font-size:.95rem;}
-  .score-input{width:50px;font-size:1.2rem;text-align:center;padding:6px;border-radius:8px;border:1px solid #333;background:#0c100b;color:var(--text);}
+  .score-input{width:50px;font-size:1.2rem;text-align:center;padding:6px;border-radius:var(--radius-sm);border:1px solid #333;background:#0c100b;color:var(--text);}
   .vs{color:var(--gold);font-weight:bold;padding:0 4px;}
-  label.small{display:block;font-size:.78rem;color:var(--muted);margin:8px 0 4px;}
-  input[type=text],input[type=password]{width:100%;padding:8px;border-radius:8px;border:1px solid #333;background:#0c100b;color:var(--text);font-size:.95rem;}
+
+  /* ===== Scoreboard de palpite (estilo placar) ===== */
+  .scoreboard{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:6px; margin-bottom:6px;
+  }
+  .scoreboard-team{
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+    flex:1; min-width:0;
+  }
+  .scoreboard-team .flag-big{
+    width:64px; height:46px; object-fit:cover; border-radius:0;
+    box-shadow:0 2px 6px rgba(0,0,0,.4); border:1px solid rgba(255,255,255,.15);
+  }
+  .scoreboard-team .abbr{
+    font-weight:800; font-size:1rem; letter-spacing:.04em; color:var(--text);
+  }
+  .scoreboard-score{
+    display:flex; align-items:center; gap:10px; flex-shrink:0;
+  }
+  .scoreboard-score-input{
+    width:54px; height:54px; font-size:1.6rem; font-weight:800; text-align:center;
+    border-radius:var(--radius-sm);
+    border:1px solid rgba(255,255,255,0.14);
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color:var(--text);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.10), 0 2px 8px rgba(0,0,0,0.3);
+    -moz-appearance:textfield;
+  }
+  .score-stepper{
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+  }
+  .score-arrow{
+    width:54px; height:24px; display:flex; align-items:center; justify-content:center;
+    border-radius:var(--radius-sm);
+    border:1px solid rgba(255,255,255,0.12);
+    background: rgba(0,0,0,0.38);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color:var(--gold);
+    font-size:.85rem; font-weight:800; cursor:pointer; line-height:1; padding:0;
+    -webkit-tap-highlight-color: transparent; user-select:none;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.10);
+    transition: background .15s;
+  }
+  .score-arrow:active{ background: rgba(255,255,255,0.10); }
+  .score-arrow:disabled{ opacity:.35; cursor:not-allowed; }
+  .scoreboard-score-input::-webkit-outer-spin-button,
+  .scoreboard-score-input::-webkit-inner-spin-button{
+    -webkit-appearance:none; margin:0;
+  }
+  .scoreboard-x{color:var(--gold); font-weight:bold; font-size:1.1rem;}
+  @media(max-width:380px){
+    .scoreboard-team .flag-big{width:48px;height:35px;}
+    .scoreboard-score-input{width:44px;height:44px;font-size:1.3rem;}
+    .score-arrow{width:44px;height:20px;font-size:.75rem;}
+    .scoreboard-team .abbr{font-size:.85rem;}
+  }
+
+  /* ===== Placar em tempo real (AO VIVO) ===== */
+  .live-box{
+    background: linear-gradient(135deg, rgba(255,40,40,0.16) 0%, rgba(0,0,0,0.30) 100%);
+    border:1px solid rgba(255,80,80,0.35);
+    border-radius:var(--radius-sm);
+    padding:10px 12px;
+    margin:6px 0 8px;
+    text-align:center;
+  }
+  .live-header{
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    font-size:.7rem; font-weight:800; letter-spacing:.04em;
+    color:#ff7373; text-transform:uppercase; margin-bottom:4px;
+  }
+  .live-dot{
+    width:8px; height:8px; border-radius:50%; background:#ff3b3b; flex-shrink:0;
+    box-shadow:0 0 6px rgba(255,59,59,.8);
+    animation: live-pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes live-pulse{
+    0%,100%{ opacity:1; transform:scale(1); }
+    50%{ opacity:.35; transform:scale(.7); }
+  }
+  .live-score{
+    font-size:1.7rem; font-weight:800; color:#fff; letter-spacing:.05em;
+  }
+  .live-goals{ margin-top:6px; display:flex; flex-direction:column; gap:3px; }
+  .live-goal{
+    font-size:.75rem; color:var(--muted); display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .live-goal-min{ color:var(--gold); font-weight:700; min-width:34px; text-align:right; }
+  .live-goal-team{ font-weight:800; color:var(--text); }
+  .live-goal-scorer{ color:var(--text); }
+  label.small{display:block;font-size:.95rem;color:var(--text);margin:8px 0 4px;}
+  input[type=text],input[type=password]{
+    width:100%;padding:10px;border-radius:var(--radius-sm);
+    border:1px solid rgba(255,255,255,0.12);
+    background: rgba(0,0,0,0.42);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color:var(--text);font-size:.95rem;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+  }
   .name-bar{display:flex;gap:8px;margin-bottom:14px;}
   .name-bar input{flex:1;}
   .login-wrap{max-width:380px;margin:40px auto;padding:0 14px;}
   .login-wrap h2{margin-top:0;text-align:center;color:var(--gold);}
   .login-wrap label.small{margin-top:12px;}
   .login-error{font-size:.8rem;color:#ff8080;margin-top:8px;min-height:1.2em;}
-  .userbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:.85rem;color:var(--muted);}
+  .userbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:.85rem;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.7);}
   .userbar b{color:var(--gold);}
   .logout-link{cursor:pointer;text-decoration:underline;}
   button{
-    background:var(--gold);color:#1a1a1a;border:none;border-radius:8px;
+    background: linear-gradient(135deg, rgba(255,204,0,0.92) 0%, rgba(220,170,0,0.92) 100%);
+    color:#1a1a1a;border:none;border-radius:var(--radius-lg);
     padding:10px 16px;font-weight:700;cursor:pointer;font-size:.9rem;
+    box-shadow: 0 4px 16px rgba(255,204,0,0.28), inset 0 1px 0 rgba(255,255,255,0.35);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
-  button.secondary{background:#2a3328;color:var(--text);}
+  button.secondary{
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.18);
+    color:var(--text);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.18);
+  }
+  button{transition:transform .12s ease, opacity .12s ease;}
+  button:active{transform:scale(.96);}
   .save-row{display:flex;justify-content:flex-end;margin-top:8px;}
+  .save-row-floating{
+    position:fixed; left:0; right:0; bottom:calc(56px + env(safe-area-inset-bottom));
+    display:flex; justify-content:center; align-items:center;
+    padding:10px 14px;
+    background:transparent;
+    z-index:35; margin-top:0;
+  }
+  .save-row-floating > div{
+    width:100%; max-width:600px; display:flex; flex-direction:column; align-items:center; gap:4px;
+  }
+  .save-bottom-spacer{height:130px;}
+  .toast-wrap{
+    position:fixed; left:0; right:0; bottom:calc(70px + env(safe-area-inset-bottom));
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    z-index:60; pointer-events:none; padding:0 14px;
+  }
+  .toast{
+    background: linear-gradient(135deg, rgba(10,20,10,0.82) 0%, rgba(5,14,5,0.88) 100%);
+    backdrop-filter: blur(28px) saturate(160%);
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+    color:var(--text); border:1px solid rgba(255,255,255,0.14);
+    border-radius:var(--radius-sm); padding:10px 18px; font-size:.85rem; font-weight:600;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.12);
+    max-width:480px; width:100%; text-align:center;
+    opacity:0; transform:translateY(12px); transition:opacity .25s ease, transform .25s ease;
+  }
+  .toast.show{opacity:1; transform:translateY(0);}
+  .toast.toast-success{border-color:rgba(123,227,138,.4); color:#7be38a;}
+  .toast.toast-error{border-color:rgba(255,128,128,.4); color:#ff8080;}
+  .missing-pred-warning{
+    background:rgba(255,128,128,.10); border:1px solid rgba(255,128,128,.35);
+    border-radius:var(--radius); padding:10px 12px; margin:10px 0;
+  }
+  .missing-pred-warning .mp-title{color:#ff8080;font-weight:800;font-size:.85rem;margin-bottom:6px;}
+  .missing-pred-game{font-size:.82rem;color:var(--text);padding:4px 0;display:flex;justify-content:space-between;gap:8px;}
+  .missing-pred-game:not(:last-child){border-bottom:1px solid rgba(255,255,255,.06);}
   .saved-tag{font-size:.75rem;color:#7be38a;margin-left:auto;align-self:center;}
-  .ranking-row{display:flex;justify-content:space-between;align-items:center;background:var(--card);padding:12px;border-radius:10px;margin-bottom:8px;}
+  .ranking-row{display:flex;justify-content:space-between;align-items:center;
+    background: linear-gradient(135deg, rgba(10,20,10,0.65) 0%, rgba(5,14,5,0.72) 100%);
+    backdrop-filter:blur(20px) saturate(140%);
+    -webkit-backdrop-filter:blur(20px) saturate(140%);
+    border: 1px solid rgba(255,255,255,0.11);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.12);
+    padding:12px;border-radius:var(--radius);margin-bottom:2px;cursor:pointer;transition:background .15s;}
+  .ranking-row:hover{background: linear-gradient(135deg, rgba(20,36,20,0.75) 0%, rgba(12,24,12,0.80) 100%);}
+.ranking-details{
+  display:none;
+  background: linear-gradient(135deg, rgba(8,16,8,0.70) 0%, rgba(5,12,5,0.76) 100%);
+  backdrop-filter:blur(24px) saturate(140%);
+  -webkit-backdrop-filter:blur(24px) saturate(140%);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-top: none;
+  border-radius:0 0 var(--radius) var(--radius);
+  margin-bottom:7px;
+  padding:8px 9px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.30);
+}
+.ranking-details.open{display:block;animation:rankingDetailsOpen .25s ease;}
+@keyframes rankingDetailsOpen{
+  from{opacity:0;transform:translateY(-8px);}
+  to{opacity:1;transform:translateY(0);}
+}
+@keyframes tabSlideInRight{
+  from{opacity:0;transform:translateX(40px);}
+  to{opacity:1;transform:translateX(0);}
+}
+@keyframes tabSlideInLeft{
+  from{opacity:0;transform:translateX(-40px);}
+  to{opacity:1;transform:translateX(0);}
+}
+.tab-content.slide-in-right{animation:tabSlideInRight .35s ease-out;}
+.tab-content.slide-in-left{animation:tabSlideInLeft .35s ease-out;}
+@keyframes rankingRowFade{
+  from{opacity:0;transform:translateX(-6px);}
+  to{opacity:1;transform:translateX(0);}
+}
+.ranking-row{transition:background .15s, transform .15s;}
+.ranking-row:active{transform:scale(.99);}
+.pred-game-row{animation:rankingRowFade .3s ease backwards;}
+.pred-game-row{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:4px;
+  padding:8px 0;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.pred-game-info{
+  font-size:.75rem;
+  color:var(--muted);
+}
+.goal-inline{margin-left:6px;white-space:nowrap;}
+.pred-game-row:last-child{border-bottom:none;}
+.pred-game-teams{flex:1;color:var(--muted);}
+.pred-game-score{font-weight:700;color:var(--text);white-space:nowrap;}
+.pred-game-pts{
+  font-weight:700;
+  white-space:nowrap;
+}
+.pred-game-pts.pts-exact{color:#7be38a;}
+.pred-game-pts.pts-result{color:var(--gold);}
+.pred-game-pts.pts-zero{color:#ff8080;}
+.pred-game-pts.pts-none{color:var(--muted);font-weight:400;}
+  .ranking-header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 12px 6px; font-size:.68rem; font-weight:700;
+  letter-spacing:.06em; text-transform:uppercase; color:#fff;
+  text-shadow:0 1px 3px rgba(0,0,0,.7);
+}
+.ranking-header .rh-pos{width:28px;}
+.ranking-header .rh-name{flex:1; text-align:left; padding-left:8px;}
+.ranking-header .rh-pts{text-align:right;}
   .pos{font-weight:800;color:var(--gold);width:28px;}
   .rname{flex:1;font-weight:600;}
   .pts{font-weight:800;color:#7be38a;}
+
+  /* ===== Pódio (top 3 do ranking) ===== */
+  .ranking-row.podium-1,
+  .ranking-row.podium-2,
+  .ranking-row.podium-3{
+    padding:16px 14px;
+    border-radius:12px;
+    margin-bottom:4px;
+    border:1px solid transparent;
+  }
+  .ranking-row.podium-1{
+    background: linear-gradient(135deg, rgba(255,204,0,0.22) 0%, rgba(255,255,255,0.08) 100%);
+    border-color:rgba(255,204,0,0.40);
+    box-shadow: 0 4px 20px rgba(255,204,0,0.18), inset 0 1px 0 rgba(255,255,255,0.24);
+  }
+  .ranking-row.podium-2{
+    background: linear-gradient(135deg, rgba(205,212,224,0.18) 0%, rgba(255,255,255,0.06) 100%);
+    border-color:rgba(205,212,224,0.30);
+    box-shadow: 0 4px 16px rgba(205,212,224,0.12), inset 0 1px 0 rgba(255,255,255,0.20);
+  }
+  .ranking-row.podium-3{
+    background: linear-gradient(135deg, rgba(205,127,50,0.20) 0%, rgba(255,255,255,0.06) 100%);
+    border-color:rgba(205,127,50,0.35);
+    box-shadow: 0 4px 16px rgba(205,127,50,0.12), inset 0 1px 0 rgba(255,255,255,0.18);
+  }
+  .ranking-row.podium-1 .rname{font-size:1.08rem;font-weight:800;color:var(--gold);}
+  .ranking-row.podium-2 .rname{font-size:1.02rem;font-weight:800;color:#e2e6ee;}
+  .ranking-row.podium-3 .rname{font-size:1.0rem;font-weight:800;color:#e3a974;}
+  .ranking-row.podium-1 .pts{font-size:1.1rem;}
+  .ranking-row.podium-2 .pts{font-size:1.05rem;}
+  .ranking-row.podium-3 .pts{font-size:1.02rem;}
+
+  /* ===== Meu Desempenho ===== */
+  .desempenho-stat-row{display:flex;justify-content:space-between;align-items:center;font-size:.9rem;}
+  .desempenho-stat-label{color:var(--text);font-weight:600;}
+  .desempenho-stat-value{font-weight:800;color:var(--gold);}
+  .desempenho-stat-sub{font-weight:400;color:var(--muted);font-size:.8rem;}
+  .desempenho-bar{height:8px;background:rgba(255,255,255,.08);border-radius:6px;margin-top:6px;overflow:hidden;}
+  .desempenho-bar-fill{height:100%;border-radius:6px;transition:width .4s ease;}
+  .desempenho-stat-pct{font-size:.72rem;color:var(--muted);margin-top:3px;}
   .admin-toggle{font-size:.75rem;color:var(--muted);text-align:center;margin:18px 0 6px;cursor:pointer;text-decoration:underline;}
-  .rules{font-size:.78rem;color:var(--muted);background:var(--card);padding:10px;border-radius:10px;margin-bottom:12px;line-height:1.5;}
+  .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.60);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:1000;padding:14px;}
+  .modal-box{
+    background: linear-gradient(160deg, rgba(10,20,10,0.80) 0%, rgba(5,14,5,0.88) 100%);
+    backdrop-filter: blur(40px) saturate(160%);
+    -webkit-backdrop-filter: blur(40px) saturate(160%);
+    border:1px solid rgba(255,255,255,0.14);
+    border-radius:var(--radius-lg);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.50), inset 0 1px 0 rgba(255,255,255,0.16);
+    max-width:480px;width:100%;max-height:85vh;overflow-y:auto;padding:16px;
+  }
+  .modal-box h3{margin:0 0 10px;color:var(--gold);text-align:center;}
+  .modal-game{background:rgba(255,255,255,.04);border-radius:var(--radius-sm);padding:10px;margin-bottom:8px;}
+  .modal-game .mteams{display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:.9rem;margin-bottom:4px;}
+  .modal-game .mscore{color:var(--gold);font-weight:800;}
+  .modal-game .mscorer{font-size:.78rem;color:var(--muted);}
+  .modal-actions{display:flex;gap:10px;margin-top:14px;}
+  .modal-actions button{flex:1;}
+  .rules{font-size:.95rem;color:var(--text);
+    background: linear-gradient(135deg, rgba(10,20,10,0.65) 0%, rgba(5,14,5,0.72) 100%);
+    backdrop-filter:blur(20px) saturate(140%);
+    -webkit-backdrop-filter:blur(20px) saturate(140%);
+    border: 1px solid rgba(255,255,255,0.11);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.12);
+    padding:10px;border-radius:var(--radius);margin-bottom:12px;line-height:1.6;}
   .badge{font-size:.7rem;background:#2a3328;padding:2px 8px;border-radius:20px;color:var(--gold);}
+  .badge-sent{background:rgba(123,227,138,.15);color:#7be38a;border:1px solid rgba(123,227,138,.4);margin-right:4px;}
+  .game-header{flex-wrap:wrap;gap:4px;}
   .empty{text-align:center;color:var(--muted);padding:30px 10px;}
   .result-set{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px;}
   .pitch-wrap{margin-top:8px;}
+  .expand-toggle{
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    cursor:pointer; padding:8px 0 2px; margin-top:2px;
+    font-size:.78rem; font-weight:700; color:var(--gold);
+    border-top:1px solid rgba(255,255,255,.08); user-select:none;
+  }
+  .expand-toggle .chevron{
+    display:inline-block; transition:transform .3s ease; font-size:.7rem;
+  }
+  .expand-toggle.open .chevron{ transform:rotate(180deg); }
+  .pred-collapse{
+    max-height:0; overflow:hidden;
+    transition:max-height .35s ease, opacity .3s ease;
+    opacity:0;
+  }
+  .pred-collapse.open{ opacity:1; }
+  .scorer-hint{
+    display:inline-flex; align-items:center; gap:5px;
+    color:var(--muted); font-weight:600; font-size:.78rem;
+  }
+  .hint-arrow{
+    display:inline-block;
+    animation:hintBounce 1.4s ease-in-out infinite;
+  }
+  @keyframes hintBounce{
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(4px); }
+  }
   .pitch-team-label{font-size:.78rem;font-weight:700;color:var(--gold);margin:6px 0 4px;}
+
+  /* ===== Toggle de escalação (abas) ===== */
+  .lineup-tabs{
+    display:flex; gap:0; margin-bottom:8px;
+    border-radius:var(--radius-sm); overflow:hidden;
+    border:1px solid rgba(255,255,255,0.12);
+    background: rgba(5,12,5,0.60);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.10), 0 2px 12px rgba(0,0,0,0.28);
+  }
+  .lineup-tab-btn{
+    flex:1; padding:8px 6px; font-size:.78rem; font-weight:700;
+    background: transparent; color:var(--muted); border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:5px;
+    transition:background .2s, color .2s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .lineup-tab-btn:first-child{ border-right:1px solid rgba(255,255,255,0.10); }
+  .lineup-tab-btn.active{
+    background: linear-gradient(135deg, rgba(255,204,0,0.20) 0%, rgba(255,204,0,0.08) 100%);
+    color:var(--gold);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.14);
+  }
+  .lineup-tab-btn .tab-flag{ width:20px; height:15px; object-fit:cover; border-radius:2px; }
+  .lineup-panel{ display:none; }
+  .lineup-panel.active{ display:block; }
+  .formation-tag{
+    margin-left:6px;
+    font-size:.68rem;
+    font-weight:800;
+    color:#0d1f0c;
+    background:var(--gold);
+    padding:1px 6px;
+    border-radius:4px;
+    vertical-align:middle;
+  }
   .pitch{
     position:relative;
-    aspect-ratio: 3 / 4;
-    background:repeating-linear-gradient(180deg,#1c5c2e,#1c5c2e 30px,#1f6633 30px,#1f6633 60px);
-    border:2px solid #3a8a4d; border-radius:8px; padding:10px 6px;
-    display:flex; flex-direction:column; gap:6px; justify-content:space-between;
+    aspect-ratio: 2 / 3;
+    background:#1b4d20;
+    border:2px solid #123516; border-radius:4px; padding:10px 4px;
+    display:flex; flex-direction:column; gap:4px; justify-content:space-around;
     overflow:hidden;
   }
   .pitch-lines{
@@ -72,14 +493,42 @@
     pointer-events:none; z-index:0;
   }
   .pitch-row, .pitch-team-label{position:relative; z-index:1;}
-  .pitch-row{display:flex; justify-content:space-around; gap:4px; flex-wrap:wrap;}
+  .pitch-row{display:flex; flex-direction:row; justify-content:space-around; align-items:flex-start; gap:4px; flex-wrap:wrap;}
   .player-token{
-    background:rgba(0,0,0,.45); border:1px solid #4a6e4a; color:var(--text);
-    border-radius:8px; padding:4px 6px; font-size:.68rem; text-align:center;
-    cursor:pointer; min-width:54px; line-height:1.2;
+    background:transparent; border:none; color:var(--text);
+    padding:0; font-size:.68rem; text-align:center;
+    cursor:pointer; min-width:54px; line-height:1.25;
+  }
+  .player-token .name-label{
+    display:inline-block;
+    background: rgba(0,0,0,0.38);
+    border:1px solid rgba(255,255,255,0.20);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius:5px;
+    padding:1px 5px;
+    margin-top:2px;
+    color:var(--text);
+    font-size:.66rem;
+    white-space:nowrap;
+    max-width:80px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
   }
   .player-token .pos{display:block;font-size:.6rem;color:var(--gold);}
-  .player-token.selected{background:var(--gold); color:#1a1a1a; border-color:var(--gold); font-weight:700;}
+  .player-token.selected .pos{color:#fff; font-weight:800;}
+  .player-token.selected{font-weight:700; position:relative; z-index:5;}
+  .player-token.selected .name-label{
+    border-color:var(--gold); color:var(--gold);
+    white-space:nowrap !important; max-width:none !important; overflow:visible !important; text-overflow:unset !important;
+    position:relative; z-index:6;
+    box-shadow:0 2px 8px rgba(0,0,0,.5);
+  }
+  .player-token.selected .player-face-wrap,
+  .player-token.selected .player-avatar{
+    box-shadow:0 0 0 2px var(--gold);
+  }
   .no-goal-btn{
     width:100%; margin-top:8px; padding:8px; border-radius:8px; border:1px dashed #555;
     background:transparent; color:var(--muted); cursor:pointer; font-size:.8rem;
@@ -88,16 +537,334 @@
   .reserves{font-size:.7rem;color:var(--muted);margin-top:4px;}
   .reserves .player-token{min-width:auto;}
   .status{font-size:.75rem;margin-top:6px;}
+
+  .date-bar{
+    display:flex; gap:8px; margin-bottom:12px;
+  }
+  .date-pill{
+    flex:1; text-align:center; padding:8px 4px; border-radius:var(--radius-sm);
+    background: linear-gradient(135deg, rgba(10,20,10,0.65) 0%, rgba(5,14,5,0.72) 100%);
+    backdrop-filter:blur(20px) saturate(140%);
+    -webkit-backdrop-filter:blur(20px) saturate(140%);
+    border: 1px solid rgba(255,255,255,0.11);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.12);
+    cursor:pointer; font-size:.78rem; color:var(--muted);
+    transition:border-color .15s, color .15s, box-shadow .15s;
+  }
+  .date-pill .date-pill-label{display:block; font-size:.65rem; text-transform:uppercase; letter-spacing:.05em; margin-bottom:2px;}
+  .date-pill .date-pill-day{display:block; font-weight:800; font-size:.95rem; color:var(--text);}
+  .date-pill.active{
+    border-color:rgba(255,204,0,0.6);
+    color:var(--gold);
+    background: linear-gradient(135deg, rgba(255,204,0,0.15) 0%, rgba(255,204,0,0.05) 100%);
+    box-shadow: 0 2px 16px rgba(255,204,0,0.18), inset 0 1px 0 rgba(255,255,255,0.18);
+  }
+  .date-pill.active .date-pill-day{color:var(--gold);}
+
+/* ===== Mini Player Cazé TV ===== */
+#cazeMiniplayer{
+  position:fixed;
+  bottom:calc(78px + env(safe-area-inset-bottom) + 8px);
+  right:12px;
+  width:300px;
+  background: linear-gradient(135deg, rgba(5,10,5,0.96) 0%, rgba(10,18,10,0.98) 100%);
+  backdrop-filter: blur(32px) saturate(160%);
+  -webkit-backdrop-filter: blur(32px) saturate(160%);
+  border:1px solid rgba(255,80,80,0.45);
+  border-radius:var(--radius);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.06);
+  z-index:9000;
+  overflow:hidden;
+  display:none;
+  animation: cazeSlideIn .3s cubic-bezier(.34,1.56,.64,1);
+  resize:both;
+  min-width:200px; max-width:480px;
+  min-height:160px;
+}
+@keyframes cazeSlideIn{
+  from{ opacity:0; transform:translateY(24px) scale(.9); }
+  to{ opacity:1; transform:translateY(0) scale(1); }
+}
+#cazeMiniplayer.visible{ display:block; }
+.caze-header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:8px 10px;
+  background: linear-gradient(90deg, rgba(255,30,30,0.18) 0%, rgba(0,0,0,0.20) 100%);
+  border-bottom:1px solid rgba(255,80,80,0.25);
+  cursor:move;
+  user-select:none;
+}
+.caze-header-left{
+  display:flex; align-items:center; gap:7px;
+}
+.caze-live-dot{
+  width:7px; height:7px; border-radius:50%; background:#ff3b3b; flex-shrink:0;
+  box-shadow:0 0 6px rgba(255,59,59,.9);
+  animation: live-pulse 1.4s ease-in-out infinite;
+}
+.caze-title{
+  font-size:.72rem; font-weight:800; color:#ff7373; letter-spacing:.05em; text-transform:uppercase;
+}
+.caze-logo{
+  font-size:.7rem; font-weight:700; color:rgba(255,255,255,.5); letter-spacing:.02em;
+}
+.caze-controls{ display:flex; align-items:center; gap:6px; }
+.caze-btn{
+  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14);
+  color:var(--text); border-radius:6px; padding:3px 8px;
+  font-size:.7rem; font-weight:700; cursor:pointer; line-height:1.4;
+  transition:background .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.caze-btn:active{ background:rgba(255,255,255,0.18); }
+.caze-btn.caze-close{ color:#ff7373; border-color:rgba(255,80,80,0.30); }
+.caze-iframe-wrap{
+  position:relative;
+  width:100%;
+  padding-top:56.25%; /* 16:9 */
+}
+.caze-iframe-wrap iframe{
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  border:none;
+}
+.caze-footer{
+  padding:5px 10px;
+  font-size:.65rem; color:var(--muted); text-align:center;
+}
+@media(max-width:420px){
+  #cazeMiniplayer{
+    right:6px; left:6px; width:auto; max-width:none;
+    bottom:calc(78px + env(safe-area-inset-bottom) + 6px);
+  }
+}
+
+/* Botão "Assistir" dentro do live-box */
+.watch-live-btn{
+  display:inline-flex; align-items:center; gap:5px;
+  margin-top:8px;
+  background: linear-gradient(135deg, rgba(255,30,30,0.85) 0%, rgba(180,10,10,0.90) 100%);
+  border:none; border-radius:20px;
+  padding:6px 14px; color:#fff; font-size:.75rem; font-weight:800;
+  cursor:pointer; letter-spacing:.03em;
+  box-shadow: 0 3px 12px rgba(255,0,0,0.35);
+  transition:transform .12s, opacity .12s;
+  -webkit-tap-highlight-color:transparent;
+}
+.watch-live-btn:active{ transform:scale(.95); opacity:.85; }
+.watch-live-btn .play-icon{ font-size:.85rem; }
+
+.player-face-wrap{
+ width:36px;height:36px;border-radius:50%;
+ overflow:hidden;
+ display:block;margin:0 auto 4px;
+ flex-shrink:0;
+ background-size:170%;
+ background-position: center 5%;
+ background-repeat:no-repeat;
+}
+.player-face{ display:none; }
+.player-avatar{
+ width:36px;height:36px;border-radius:50%;
+ display:flex;align-items:center;justify-content:center;
+ background: rgba(0,0,0,0.45);
+ border: 1px solid rgba(255,255,255,0.16);
+ backdrop-filter: blur(8px);
+ font-size:.6rem;margin:0 auto 4px;color:var(--text);
+ box-shadow: inset 0 1px 0 rgba(255,255,255,0.14);
+}
+.ball-icon{
+ width:1em;height:1em;
+ vertical-align:-0.15em;
+ display:inline-block;
+}
+
+/* Escalação confirmada (titulares) - fotos maiores */
+.pitch.confirmed-lineup .player-face-wrap,
+.pitch.confirmed-lineup .player-avatar{
+ width:54px;height:54px;
+}
+.pitch.confirmed-lineup .player-token .name-label{
+ font-size:.72rem;
+ max-width:90px;
+}
+.pitch.confirmed-lineup .player-token{
+ min-width:64px;
+}
+@media(max-width:480px){
+  .pitch.confirmed-lineup .player-face-wrap,
+  .pitch.confirmed-lineup .player-avatar{
+    width:46px!important;height:46px!important;
+  }
+  .pitch.confirmed-lineup .player-token .name-label{
+    font-size:.66rem!important;
+    max-width:80px!important;
+  }
+  .pitch.confirmed-lineup .player-token{
+    min-width:56px!important;
+  }
+}
 </style>
+
+    <style id="mobile-photo-fix">
+    .player-token{min-width:44px!important;padding:0!important}
+    .player-face-wrap,.player-avatar{width:38px!important;height:38px!important;}
+    @media(max-width:480px){
+      .player-face-wrap,.player-avatar{width:32px!important;height:32px!important}
+      .player-token .name-label{font-size:.6rem!important;max-width:64px!important}
+    }
+    </style>
+    
+
+<style id="bench-patch">
+.bench-list{margin-top:8px}
+.bench-list summary{
+ cursor:pointer;
+ color:#ffcc00;
+ font-weight:700;
+ padding:6px 0;
+ list-style:none;
+ display:flex;
+ align-items:center;
+ gap:6px;
+}
+.bench-list summary::before{content:"▶";font-size:.65rem;transition:transform .2s;}
+.bench-list[open] summary::before{transform:rotate(90deg);}
+.bench-group{margin-bottom:6px;}
+.bonus-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+.bonus-row .rname{min-width:120px;font-weight:600;flex:1;}
+.bonus-pts-input{width:64px;font-size:1rem;text-align:center;padding:6px;border-radius:8px;border:1px solid #333;background:#0c100b;color:var(--text);}
+.bonus-reason{flex:2;min-width:120px;font-size:.85rem;padding:6px 8px;border-radius:8px;border:1px solid #333;background:#0c100b;color:var(--text);}
+.bonus-history{font-size:.75rem;color:var(--muted);margin-top:4px;padding:4px 8px;background:#0c100b;border-radius:6px;}
+.bonus-history span{color:#7be38a;font-weight:700;}
+.bench-group-label{
+ font-size:.65rem;
+ font-weight:800;
+ text-transform:uppercase;
+ letter-spacing:.06em;
+ color:var(--muted);
+ padding:4px 0 2px;
+ border-bottom:1px solid #2a3328;
+ margin-bottom:4px;
+}
+.bench-grid{
+ display:flex;
+ flex-direction:column;
+ gap:3px;
+}
+.bench-grid .player-token{
+ display:flex;
+ align-items:center;
+ padding:5px 8px;
+ background: rgba(0,0,0,0.35);
+ border: 1px solid rgba(255,255,255,0.10);
+ backdrop-filter: blur(10px);
+ -webkit-backdrop-filter: blur(10px);
+ border-radius:8px;
+ font-size:.78rem;
+ cursor:pointer;
+ transition:background .15s;
+ box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.bench-grid .player-token:hover{background: rgba(255,255,255,0.08);}
+.bench-grid .player-token .bench-pos{
+ font-size:.62rem;
+ font-weight:900;
+ color:#1a1a1a;
+ background:var(--gold);
+ border-radius:4px;
+ padding:1px 5px;
+ margin-right:8px;
+ min-width:30px;
+ text-align:center;
+ flex-shrink:0;
+}
+.bench-grid .player-token .bench-name{
+ flex:1;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ color:var(--text);
+}
+.bench-grid .player-token.selected{
+ outline:2px solid var(--gold);
+ background:#243020;
+}
+.bench-grid .player-token.selected .bench-pos{background:#fff;}
+.bench-grid .player-token.selected .bench-name{color:var(--gold);font-weight:700;}
+
+/* ===== Mobile lineup fixes ===== */
+@media (max-width:420px){
+  .pitch{
+    padding:6px 2px !important;
+    overflow:visible !important;
+  }
+  .pitch-row{
+    flex-wrap:nowrap !important;
+    gap:1px !important;
+    justify-content:space-evenly !important;
+  }
+  .pitch.confirmed-lineup .player-token,
+  .player-token{
+    min-width:0 !important;
+    flex:1 1 0 !important;
+  }
+  .pitch.confirmed-lineup .player-face-wrap,
+  .pitch.confirmed-lineup .player-avatar,
+  .player-face-wrap,.player-avatar{
+    width:28px !important;
+    height:28px !important;
+  }
+  .player-token .name-label{
+    max-width:56px !important;
+    font-size:.55rem !important;
+    margin-top:1px !important;
+    line-height:1.1 !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+  }
+  .player-token.selected .name-label{
+    max-width:none !important;
+    overflow:visible !important;
+    text-overflow:unset !important;
+    position:relative !important;
+    z-index:6 !important;
+  }
+  .player-token.selected{
+    position:relative !important;
+    z-index:5 !important;
+  }
+  .player-token .pos{
+    font-size:.52rem !important;
+    margin-top:0 !important;
+    line-height:1.1 !important;
+    display:block !important;
+    width:100% !important;
+    text-align:center !important;
+  }
+  .player-token{
+    line-height:1.1 !important;
+  }
+  .teams{
+    gap:4px !important;
+  }
+  .score-input{
+    width:42px !important;
+  }
+}
+</style>
+
 </head>
-<body>
+<body class="has-bottom-nav">
 
 <header>
-  <h1>🏆 Bolão Copa do Mundo 2026</h1>
-  <p>Faça seus palpites e acompanhe o ranking dos amigos</p>
+  <img src="https://assets.football-logos.cc/logos/tournaments/700x700/fifa-world-cup-2026--white.9ba8a004.png" alt="FIFA World Cup 2026" style="width:140px;opacity:.92;filter:drop-shadow(0 2px 6px rgba(0,0,0,.5));">
+  <h1>Bolão Maldosos Copa do Mundo 2026</h1>
+  <p>Faça seus palpites e acompanhe o ranking</p>
+  <p>              Beta 1.8                 </p>
+  <p>Em desenvolvimento, reporte bugs no grupo</p>
 </header>
 
-<!-- TELA DE LOGIN -->
 <div id="loginScreen" class="login-wrap">
   <div id="firebaseWarning" class="rules" style="display:none;border:1px solid #ff8080;color:#ffb3b3;margin-bottom:12px;">
     ⚠️ <b>Firebase não configurado.</b> Abra o arquivo HTML em um editor de texto, encontre o objeto <code>firebaseConfig</code>
@@ -113,20 +880,20 @@
     <div class="save-row"><button id="loginBtn">Entrar</button></div>
     <div class="login-error" id="loginMsg"></div>
     <div class="rules" style="margin-top:14px;">
-      Na primeira vez, digite um nome e crie uma senha — ela será cadastrada.
+      Na primeira vez, digite um nome e crie uma senha.
       Da próxima vez, use o mesmo nome e a mesma senha para acessar seus palpites.
-      Cada pessoa só vê os próprios palpites; o ranking é compartilhado com todos.
+      
     </div>
   </div>
 </div>
 
-<!-- APP -->
 <div id="appWrap" style="display:none;">
 
   <div class="tabs">
-    <div class="tab active" data-tab="palpites">Palpites</div>
-    <div class="tab" data-tab="ranking">Ranking</div>
-    <div class="tab" data-tab="admin-all" id="tabAdminAll" style="display:none;">Todos os Palpites</div>
+    <div class="tab active" data-tab="palpites"><img class="tab-icon-img"src="https://res.cloudinary.com/adidas-app/image/upload/v1/page-assets/40/hczyjk8eeryat5dh9fhp.png" alt="">Palpites</div>
+    <div class="tab" data-tab="ranking"><img class="tab-icon-img" src="https://em-content.zobj.net/source/apple/453/trophy_1f3c6.png" alt="">Ranking</div>
+    <div class="tab" data-tab="desempenho"><img class="tab-icon-img" src="https://em-content.zobj.net/source/apple/453/bust-in-silhouette_1f464.png" alt="">Perfil</div>
+    <div class="tab" data-tab="admin-all" id="tabAdminAll" style="display:none;"><span class="tab-icon">👁️</span>Todos</div>
   </div>
 
   <div class="container">
@@ -136,26 +903,51 @@
       <span class="logout-link" id="logoutBtn">Sair</span>
     </div>
 
-    <!-- PALPITES TAB -->
-    <div id="tab-palpites">
+    <div id="tab-palpites" class="tab-content">
       <div class="rules">
         <b>Como pontua:</b><br>
-        ⚽ Acertou o placar exato: <b>5 pts</b><br>
-        🎯 Acertou só o resultado (vitória/empate, placar errado): <b>2 pts</b><br>
-        🥇 Acertou quem fez o 1º gol da partida: <b>3 pts</b><br>
-        <span class="muted">Se o jogo terminar 0x0, ninguém ganha pontos do 1º gol.</span>
+        🎯 Acertou o placar exato: <b style="color:#7be38a;">3 pts</b><br>
+        🥇 Acertou somente o vencedor: <b style="color:var(--gold);">1 pt</b><br>
+         <img class="ball-icon"src="https://res.cloudinary.com/adidas-app/image/upload/c_limit,h_2532,q_auto:good,w_2532/v1/page-assets/40/hczyjk8eeryat5dh9fhp.png" alt="bola">&nbsp;&nbsp;Acertou quem fez o 1º gol da partida: <b style="color:#7be38a;">2 pts</b><br>
+        <span class="muted"></span>
       </div>
 
+      <!-- ===== Card Cazé TV AO VIVO ===== -->
+      <div class="card" id="cazeTvCard" style="background:linear-gradient(135deg,rgba(180,20,20,0.22) 0%,rgba(10,18,10,0.72) 100%);border-color:rgba(255,80,80,0.40);cursor:pointer;" onclick="openCazePlayer()">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="position:relative;flex-shrink:0;">
+              <img src="https://yt3.googleusercontent.com/ytc/AIdro_kTtLCwMflLVT3P0K5H4qPbHFMFiVLGVRNPXFr7nMxGpA=s88-c-k-c0x00ffffff-no-rj" alt="Cazé TV" style="width:48px;height:48px;border-radius:50%;border:2px solid rgba(255,80,80,0.6);object-fit:cover;box-shadow:0 0 12px rgba(255,40,40,0.4);">
+              <span style="position:absolute;bottom:-2px;right:-2px;background:#ff3b3b;border-radius:4px;font-size:.5rem;font-weight:900;color:#fff;padding:1px 4px;letter-spacing:.04em;line-height:1.4;box-shadow:0 0 6px rgba(255,59,59,.8);">AO VIVO</span>
+            </div>
+            <div>
+              <div style="font-weight:800;font-size:.95rem;color:#fff;">Cazé TV</div>
+              <div style="font-size:.75rem;color:#ff9999;margin-top:2px;display:flex;align-items:center;gap:5px;">
+                <span class="live-dot" style="width:6px;height:6px;border-radius:50%;background:#ff3b3b;flex-shrink:0;box-shadow:0 0 5px rgba(255,59,59,.8);animation:live-pulse 1.4s ease-in-out infinite;display:inline-block;"></span>
+                Transmissão ao vivo da Copa
+              </div>
+            </div>
+          </div>
+          <div style="background:rgba(255,59,59,0.18);border:1px solid rgba(255,80,80,0.40);border-radius:var(--radius-sm);padding:8px 14px;font-size:.82rem;font-weight:800;color:#ff9999;white-space:nowrap;display:flex;align-items:center;gap:5px;">
+            ▶ Assistir
+          </div>
+        </div>
+      </div>
+      <!-- ===== /Card Cazé TV ===== -->
+
+      <div id="dateBar" class="date-bar"></div>
       <div id="gamesList"></div>
     </div>
 
-    <!-- RANKING TAB -->
-    <div id="tab-ranking" style="display:none;">
+    <div id="tab-ranking" class="tab-content" style="display:none;">
       <div id="rankingList"></div>
     </div>
 
-    <!-- TODOS OS PALPITES (somente admin) -->
-    <div id="tab-admin-all" style="display:none;">
+    <div id="tab-desempenho" class="tab-content" style="display:none;">
+      <div id="desempenhoContent"></div>
+    </div>
+
+    <div id="tab-admin-all" class="tab-content" style="display:none;">
       <div class="rules">👁️ Como administrador, você pode ver os palpites de todos os participantes.</div>
       <div id="allPredsList"></div>
     </div>
@@ -163,13 +955,32 @@
     <div class="admin-toggle" id="adminToggle" style="display:none;">⚙️ Área do administrador (lançar resultados)</div>
     <div id="adminPanel" style="display:none;"></div>
 
+    <div class="admin-toggle" id="bonusToggle" style="display:none;">Área do administrador (pontuação manual)</div>
+    <div id="bonusPanel" style="display:none;"></div>
+
   </div>
 </div>
 
+<!-- ===== Mini Player Cazé TV ===== -->
+<div id="cazeMiniplayer">
+  <div class="caze-header" id="cazeHeader">
+    <div class="caze-header-left">
+      <span class="caze-live-dot"></span>
+      <span class="caze-title">AO VIVO</span>
+      <span class="caze-logo">· CAZÉ TV</span>
+    </div>
+    <div class="caze-controls">
+      <button class="caze-btn" id="cazePipBtn" title="Picture-in-Picture">⛶</button>
+      <button class="caze-btn caze-close" id="cazeCloseBtn">✕</button>
+    </div>
+  </div>
+  <div class="caze-iframe-wrap" id="cazeIframeWrap">
+    <!-- iframe será injetado via JS ao abrir -->
+  </div>
+  <div class="caze-footer">Transmissão via Cazé TV • YouTube</div>
+</div>
 
 
-
-<!-- ====== FIREBASE (banco de dados gratuito p/ rodar fora do Claude.ai) ====== -->
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-database-compat.js"></script>
 
@@ -183,18 +994,40 @@
 // =========================================================================
 const firebaseConfig = {
   apiKey: "AIzaSyDVb4aiLczCufxo-mayBIsoOVtbbdXfy5A",
-    authDomain: "bolao-a5bae.firebaseapp.com",
-    databaseURL: "https://bolao-a5bae-default-rtdb.firebaseio.com",
-    projectId: "bolao-a5bae",
-    storageBucket: "bolao-a5bae.firebasestorage.app",
-    messagingSenderId: "577935917534",
-    appId: "1:577935917534:web:223722e0de2b3a04d81d4f"
-  };
+  authDomain: "bolao-a5bae.firebaseapp.com",
+  databaseURL: "https://bolao-a5bae-default-rtdb.firebaseio.com",
+  projectId: "bolao-a5bae",
+  storageBucket: "bolao-a5bae.firebasestorage.app",
+  messagingSenderId: "577935917534",
+  appId: "1:577935917534:web:223722e0de2b3a04d81d4f"
+};
 
 const FB_ROOT = "bolao2026";
 let fbReady = false;
+
+// ---- Cache do snapshot Firebase (evita round-trips repetidos) ----
+let _fbSnapCache = null;      // valor do snapshot
+let _fbSnapCacheTs = 0;       // timestamp da última busca
+const FB_SNAP_CACHE_TTL = 30000; // 30 segundos
+
+async function getFirebaseSnap(){
+  const now = Date.now();
+  if(_fbSnapCache && (now - _fbSnapCacheTs) < FB_SNAP_CACHE_TTL){
+    return _fbSnapCache;
+  }
+  const snap = await firebase.database().ref(FB_ROOT).get();
+  _fbSnapCache = snap;
+  _fbSnapCacheTs = Date.now();
+  return snap;
+}
+
+function invalidateFirebaseCache(){
+  _fbSnapCache = null;
+  _fbSnapCacheTs = 0;
+}
 try{
-  if(firebaseConfig.apiKey && firebaseConfig.apiKey !== "COLE_AQUI_SUA_API_KEY"){
+  // Correção aplicada: Agora valida se a chave foi preenchida (removida a trava fixa da string padrão antiga)
+  if(firebaseConfig.apiKey && firebaseConfig.apiKey.trim() !== "" && !firebaseConfig.apiKey.includes("SUA_CHAVE_AQUI")){
     firebase.initializeApp(firebaseConfig);
     fbReady = true;
   }
@@ -222,14 +1055,28 @@ window.storage = {
     return { key, deleted: true, shared: !!shared };
   },
   async list(prefix, shared){
-    if(!fbReady) throw new Error("Firebase não configurado. Edite firebaseConfig no início do arquivo.");
-    const ref = firebase.database().ref(FB_ROOT);
-    let query = ref.orderByKey();
-    if(prefix) query = query.startAt(prefix).endAt(prefix + "\uf8ff");
-    const snap = await query.get();
+    if(!fbReady)
+      throw new Error("Firebase não configurado. Edite firebaseConfig no início do arquivo.");
+
+    const snap = await firebase.database()
+      .ref(FB_ROOT)
+      .get();
+
     const keys = [];
-    snap.forEach(child => keys.push(child.key));
-    return { keys, prefix, shared: !!shared };
+
+    if(snap.exists()){
+      snap.forEach(child => {
+        if(!prefix || child.key.startsWith(prefix)){
+          keys.push(child.key);
+        }
+      });
+    }
+
+    return {
+      keys,
+      prefix,
+      shared: !!shared
+    };
   }
 };
 </script>
@@ -237,16 +1084,39 @@ window.storage = {
 <script>
 const STORAGE_PREFIX = "bolao2026";
 
-// Nome de usuário (em minúsculas, sem espaços/acentos) que terá acesso de administrador.
-// Para virar admin, cadastre-se na tela de login com o nome "admin" (a senha pode ser qualquer uma que você escolher).
-const ADMIN_SLUG = "admin";
+// ---------- Toast (substitui alert) ----------
+function showToast(message, type = ""){
+  let wrap = document.getElementById("toastWrap");
+  if(!wrap){
+    wrap = document.createElement("div");
+    wrap.id = "toastWrap";
+    wrap.className = "toast-wrap";
+    document.body.appendChild(wrap);
+  }
+  const toast = document.createElement("div");
+  toast.className = "toast" + (type ? ` toast-${type}` : "");
+  toast.textContent = message;
+  wrap.appendChild(toast);
+  requestAnimationFrame(()=> toast.classList.add("show"));
+  setTimeout(()=>{
+    toast.classList.remove("show");
+    setTimeout(()=> toast.remove(), 300);
+  }, 3000);
+}
 
+
+// Nome de usuário (em minúsculas, sem espaços/acentos) que terá acesso de administrador.
+const ADMIN_SLUG = "admin";
 
 // ======= JOGOS DA COPA 2026 (carregados automaticamente da ESPN) =======
 let GAMES = [];
-
-const ESPN_LEAGUE = "fifa.world"; // Copa do Mundo FIFA
-// Período do torneio (ajuste se necessário)
+let LIVE = {}; // placar/tempo em tempo real dos jogos em andamento, por id (vem da ESPN)
+let selectedDateStr = null; // "DD/MM/YYYY"
+let renderRequestId = 0; // evita que renders antigos (async) sobrescrevam o dia atual
+// Guarda os palpites que o usuário alterou na tela mas ainda não salvou,
+// para que não se percam ao trocar de dia/aba antes de clicar em "Salvar".
+let unsavedPreds = {};
+const ESPN_LEAGUE = "fifa.world"; 
 const ESPN_DATE_RANGE = "20260611-20260719";
 
 async function fetchEspnSchedule(){
@@ -256,13 +1126,13 @@ async function fetchEspnSchedule(){
     const res = await fetch(target);
     data = await res.json();
   }catch(e){
-    // fallback via proxy CORS público
     const proxyUrl = `https://corsproxy.io/?` + encodeURIComponent(target);
     const res = await fetch(proxyUrl);
     data = await res.json();
   }
   const games = [];
   const results = {};
+  const live = {};
 
   for(const ev of (data.events || [])){
     const comp = ev.competitions[0];
@@ -281,7 +1151,7 @@ async function fetchEspnSchedule(){
       awayId: away.team.id
     });
 
-    const status = comp.status?.type?.state; // "pre" | "in" | "post"
+    const status = comp.status?.type?.state; 
     if(status === "post"){
       let scorer = "";
       const goals = (comp.details || []).filter(d => d.type?.text === "Goal" || d.scoringPlay);
@@ -295,20 +1165,37 @@ async function fetchEspnSchedule(){
         away: parseInt(away.score),
         scorer
       };
+    } else if(status === "in"){
+      // Jogo em andamento agora: guardamos placar, tempo/status e a lista de gols já marcados.
+      const goalEvents = (comp.details || [])
+        .filter(d => d.scoringPlay)
+        .map(d => ({
+          minute: d.clock?.displayValue || "",
+          side: d.team?.id === home.team.id ? "home" : (d.team?.id === away.team.id ? "away" : ""),
+          scorer: d.athletesInvolved?.[0]?.displayName || d.athletesInvolved?.[0]?.shortName || "",
+          own: !!d.ownGoal,
+          penalty: !!d.penaltyKick
+        }));
+      live[ev.id] = {
+        home: parseInt(home.score) || 0,
+        away: parseInt(away.score) || 0,
+        clock: comp.status?.displayClock || "",
+        detail: comp.status?.type?.detail || comp.status?.type?.shortDetail || "",
+        goals: goalEvents
+      };
     }
   }
-  return { games, results };
+  return { games, results, live };
 }
-// ========================================================================
 
-const PTS_EXACT = 5;
-const PTS_RESULT = 2;
-const PTS_SCORER = 3;
+const PTS_EXACT = 3;
+const PTS_RESULT = 1;
+const PTS_SCORER = 2;
 
-// Mapa de nomes de seleções (ESPN) -> código ISO para bandeira
 const COUNTRY_CODES = {
   "Brazil":"br","Brasil":"br","Argentina":"ar","Mexico":"mx","México":"mx",
   "United States":"us","USA":"us","Canada":"ca","Canadá":"ca",
+  "Bosnia and Herzegovina": "ba","Bósnia e Herzegovina": "ba","Bosnia-Herzegovina": "ba",
   "France":"fr","Germany":"de","Alemanha":"de","Spain":"es","Espanha":"es",
   "Portugal":"pt","England":"gb-eng","Italy":"it","Itália":"it",
   "Netherlands":"nl","Holanda":"nl","Belgium":"be","Bélgica":"be",
@@ -323,27 +1210,272 @@ const COUNTRY_CODES = {
   "Switzerland":"ch","Suíça":"ch","Poland":"pl","Polônia":"pl","Serbia":"rs","Sérvia":"rs",
   "Denmark":"dk","Dinamarca":"dk","Sweden":"se","Suécia":"se","Norway":"no","Noruega":"no",
   "Wales":"gb-wls","Scotland":"gb-sct","Ukraine":"ua","Ucrânia":"ua",
-  "Austria":"at","Áustria":"at","Czech Republic":"cz","Tchéquia":"cz",
-  "Turkey":"tr","Turquia":"tr","Russia":"ru","Rússia":"ru","Greece":"gr","Grécia":"gr",
+  "Austria":"at","Áustria":"at","Czech Republic":"cz","Tchéquia":"cz","Czechia":"cz",
+  "Turkey":"tr","Turquia":"tr","Türkiye":"tr","Russia":"ru","Rússia":"ru","Greece":"gr","Grécia":"gr",
   "Costa Rica":"cr","Panama":"pa","Panamá":"pa","Jamaica":"jm","Honduras":"hn",
   "New Zealand":"nz","Nova Zelândia":"nz","Paraguay":"py","Paraguai":"py",
   "Venezuela":"ve","Bolivia":"bo","Bolívia":"bo","China":"cn","India":"in","Índia":"in",
   "Iraq":"iq","Iraque":"iq","Jordan":"jo","Jordânia":"jo","UAE":"ae",
   "Uzbekistan":"uz","Usbequistão":"uz","Curaçao":"cw","Haiti":"ht","Suriname":"sr",
-  "Cape Verde":"cv","Cabo Verde":"cv","DR Congo":"cd","RD Congo":"cd"
+  "Cape Verde":"cv","Cabo Verde":"cv","DR Congo":"cd","RD Congo":"cd",
+  "Ivory Coast":"ci","Côte d'Ivoire":"ci","Costa do Marfim":"ci"
 };
 
-function flagImg(teamName){
+// ---------- Atualização periódica do placar em tempo real ----------
+// A cada ciclo, busca de novo o placar/cronômetro/gols dos jogos "em andamento"
+// na ESPN e atualiza só o trecho de status de cada jogo já exibido na tela —
+// sem redesenhar o card inteiro (preserva o que o usuário está digitando).
+// Se algum jogo acabou de terminar, salva o resultado e refaz o render do dia.
+let liveRefreshRunning = false;
+async function refreshLiveScores(){
+  // Evita rodar se a aba de palpites não está visível ou se já tem outra atualização em andamento
+  const activeTab = document.querySelector(".tab.active");
+  if(!activeTab || activeTab.dataset.tab !== "palpites") return;
+  if(liveRefreshRunning) return;
+  liveRefreshRunning = true;
+
+  try{
+    let data;
+    try{
+      data = await fetchEspnSchedule();
+    }catch(e){
+      return; // falha silenciosa, tenta de novo no próximo ciclo
+    }
+
+    const { results, live } = data;
+    LIVE = live;
+
+    let needsFullRerender = false;
+
+    for(const game of GAMES){
+      if(!selectedDateStr || !game.date.startsWith(selectedDateStr)) continue;
+
+      const statusEl = document.getElementById(`status-${game.id}`);
+      if(!statusEl) continue; // jogo não está sendo exibido agora
+
+      if(results[game.id]){
+        // Jogo acabou de terminar (ou já tinha terminado)
+        let already = null;
+        try{
+          const r = await window.storage.get(`result:${game.id}`, true);
+          if(r) already = JSON.parse(r.value);
+        }catch(e){}
+        if(!already){
+          if(fbReady){
+            try{ await window.storage.set(`result:${game.id}`, JSON.stringify(results[game.id]), true); }catch(e){}
+          }
+          needsFullRerender = true;
+        }
+      } else if(live[game.id]){
+        statusEl.innerHTML = renderLiveBox(game, live[game.id]);
+      }
+    }
+
+    if(needsFullRerender){
+      await loadAndRenderGames();
+    }
+  }finally{
+    liveRefreshRunning = false;
+  }
+}
+// Verifica jogos em andamento a cada 30 segundos
+setInterval(refreshLiveScores, 30000);
+
+
+// Retorna true se o jogo já começou há mais de 15 minutos
+function getGameDateObj(game){
+  try{
+    // game.date está no formato "DD/MM/YYYY, HH:MM"
+    const parts = game.date.match(/(\d{2})\/(\d{2})\/(\d{4}),?\s+(\d{2}):(\d{2})/);
+    if(!parts) return null;
+    return new Date(
+      parseInt(parts[3]),   // year
+      parseInt(parts[2])-1, // month (0-indexed)
+      parseInt(parts[1]),   // day
+      parseInt(parts[4]),   // hour
+      parseInt(parts[5])    // minute
+    );
+  }catch(e){
+    return null;
+  }
+}
+
+function isGameLocked(game){
+  const gameTime = getGameDateObj(game);
+  if(!gameTime) return false;
+  const cutoff = new Date(gameTime.getTime() + 15 * 60 * 1000); // +15 min
+  return new Date() >= cutoff;
+}
+
+// ---------- Placar em tempo real (jogos "em andamento" segundo a ESPN) ----------
+const LIVE_DETAIL_PT = {
+  "1st Half":"1º Tempo", "2nd Half":"2º Tempo", "Halftime":"Intervalo",
+  "Extra Time":"Prorrogação","1st Half Extra Time":"1º Tempo (Prorr.)",
+  "2nd Half Extra Time":"2º Tempo (Prorr.)","Halftime Extra Time":"Intervalo (Prorr.)",
+  "Penalty Shootout":"Disputa de pênaltis","Pre-Game":"Pré-jogo","Full Time":"Fim de jogo"
+};
+function translateLiveDetail(detail){
+  return LIVE_DETAIL_PT[detail] || detail || "";
+}
+// A ESPN às vezes manda em "detail" algo como "45'" (igual ao displayClock),
+// em vez de "1st Half"/"2nd Half". Isso detecta esse caso pra não duplicar o tempo.
+function isTimeLike(str){
+  return /^\d+('|\+)?\d*'?$/.test((str || "").trim());
+}
+
+// Monta o HTML da caixa "AO VIVO" (placar real, tempo de jogo e gols já marcados)
+function renderLiveBox(game, liveInfo){
+  if(!liveInfo) return "";
+  const clock = liveInfo.clock || "";
+  const detailPt = translateLiveDetail(liveInfo.detail);
+  const showDetail = detailPt && detailPt !== clock && !isTimeLike(liveInfo.detail);
+  const goalsHtml = (liveInfo.goals || []).map(g=>{
+  if(!g.side) return "";
+
+  const teamName = g.side === "home" ? game.home : game.away;
+  const abbr = teamAbbr(teamName);
+
+  let scorerTxt = g.scorer || "Gol";
+  if(g.own) scorerTxt += " (contra)";
+  if(g.penalty) scorerTxt += " (pên.)";
+
+ return `
+<div class="live-goal">
+  <span class="live-goal-min">
+    <img
+      class="ball-icon live-goal-ball"
+      src="https://res.cloudinary.com/adidas-app/image/upload/c_limit,h_2532,q_auto:good,w_2532/v1/page-assets/40/hczyjk8eeryat5dh9fhp.png"
+      alt="bola">
+    ${g.minute}
+  </span>
+  <span class="live-goal-team">${abbr}</span>
+  <span class="live-goal-scorer">${scorerTxt}</span>
+</div>`;
+}).join("");
+
+  return `
+    <div class="live-box">
+      <div class="live-header"><span class="live-dot"></span>AO VIVO${showDetail ? " • " + detailPt : ""}${clock ? " • " + clock : ""}</div>
+      <div class="live-score">${liveInfo.home} x ${liveInfo.away}</div>
+
+      ${isGameLocked(game) ? `
+<div style="font-size:.72rem;color:#ffb0b0;font-weight:700;margin-top:4px;">
+   Palpites encerrados - jogo em andamento
+</div>
+` : ""}
+
+      ${goalsHtml ? `<div class="live-goals">${goalsHtml}</div>` : ""}
+
+      <button class="watch-live-btn" onclick="openCazePlayer()">
+        <span class="play-icon">▶</span> Assistir na Cazé TV
+      </button>
+    </div>
+  `;
+}
+
+function flagImg(teamName, size){
   const code = COUNTRY_CODES[teamName];
-  if(code) return `<img src="https://flagcdn.com/24x18/${code}.png" alt="${teamName}" style="vertical-align:middle;border-radius:2px;margin-right:4px;">`;
+  const w = size || 24;
+  const h = Math.round(w * 0.75);
+  if(code) return `<img src="https://flagcdn.com/w160/${code}.png" alt="${teamName}" style="width:${w}px;height:${h}px;object-fit:cover;vertical-align:middle;border-radius:0;margin-right:4px;">`;
   return "";
 }
 
-// busca o elenco completo do time (com posição) quando a escalação titular não saiu ainda
+// Siglas de 3 letras (padrão FIFA) usadas no card de palpite estilo "scoreboard"
+const TEAM_ABBR = {
+  "Brazil":"BRA","Brasil":"BRA","Argentina":"ARG","Mexico":"MEX","México":"MEX",
+  "United States":"USA","USA":"USA","Canada":"CAN","Canadá":"CAN",
+  "Bosnia and Herzegovina":"BIH","Bósnia e Herzegovina":"BIH","Bosnia-Herzegovina":"BIH",
+  "France":"FRA","Germany":"GER","Alemanha":"GER","Spain":"ESP","Espanha":"ESP",
+  "Portugal":"POR","England":"ENG","Italy":"ITA","Itália":"ITA",
+  "Netherlands":"NED","Holanda":"NED","Belgium":"BEL","Bélgica":"BEL",
+  "Croatia":"CRO","Croácia":"CRO","Uruguay":"URU","Uruguai":"URU",
+  "Colombia":"COL","Colômbia":"COL","Chile":"CHI","Peru":"PER","Equador":"ECU","Ecuador":"ECU",
+  "Japan":"JPN","Japão":"JPN","South Korea":"KOR","Coreia do Sul":"KOR",
+  "Australia":"AUS","Austrália":"AUS","Saudi Arabia":"KSA","Arábia Saudita":"KSA",
+  "Qatar":"QAT","Iran":"IRN","Irã":"IRN","Morocco":"MAR","Marrocos":"MAR",
+  "Senegal":"SEN","Ghana":"GHA","Gana":"GHA","Cameroon":"CMR","Camarões":"CMR",
+  "Nigeria":"NGA","Nigéria":"NGA","Tunisia":"TUN","Tunísia":"TUN","Egypt":"EGY","Egito":"EGY",
+  "Algeria":"ALG","Argélia":"ALG","South Africa":"RSA","África do Sul":"RSA",
+  "Switzerland":"SUI","Suíça":"SUI","Poland":"POL","Polônia":"POL","Serbia":"SRB","Sérvia":"SRB",
+  "Denmark":"DEN","Dinamarca":"DEN","Sweden":"SWE","Suécia":"SWE","Norway":"NOR","Noruega":"NOR",
+  "Wales":"WAL","Scotland":"SCO","Ukraine":"UKR","Ucrânia":"UKR",
+  "Austria":"AUT","Áustria":"AUT","Czech Republic":"CZE","Tchéquia":"CZE","Czechia":"CZE",
+  "Turkey":"TUR","Turquia":"TUR","Türkiye":"TUR","Russia":"RUS","Rússia":"RUS","Greece":"GRE","Grécia":"GRE",
+  "Costa Rica":"CRC","Panama":"PAN","Panamá":"PAN","Jamaica":"JAM","Honduras":"HON",
+  "New Zealand":"NZL","Nova Zelândia":"NZL","Paraguay":"PAR","Paraguai":"PAR",
+  "Venezuela":"VEN","Bolivia":"BOL","Bolívia":"BOL","China":"CHN","India":"IND","Índia":"IND",
+  "Iraq":"IRQ","Iraque":"IRQ","Jordan":"JOR","Jordânia":"JOR","UAE":"UAE",
+  "Uzbekistan":"UZB","Usbequistão":"UZB","Curaçao":"CUW","Haiti":"HAI","Suriname":"SUR",
+  "Cape Verde":"CPV","Cabo Verde":"CPV","DR Congo":"COD","RD Congo":"COD",
+  "Ivory Coast":"CIV","Côte d'Ivoire":"CIV","Costa do Marfim":"CIV"
+};
+
+function teamAbbr(teamName){
+  if(TEAM_ABBR[teamName]) return TEAM_ABBR[teamName];
+  // fallback: 3 primeiras letras do nome em maiúsculo
+  return teamName.replace(/[^A-Za-zÀ-ÿ]/g,"").slice(0,3).toUpperCase();
+}
+
+// Tradução dos nomes das seleções (em inglês, vindos da ESPN) para português
+const TEAM_NAME_PT = {
+  "Brazil":"Brasil","Argentina":"Argentina","Mexico":"México","United States":"Estados Unidos",
+  "Canada":"Canadá","Bosnia and Herzegovina":"Bósnia e Herzegovina","France":"França",
+  "Germany":"Alemanha","Spain":"Espanha","Portugal":"Portugal","England":"Inglaterra",
+  "Italy":"Itália","Netherlands":"Holanda","Belgium":"Bélgica","Croatia":"Croácia",
+  "Uruguay":"Uruguai","Colombia":"Colômbia","Chile":"Chile","Peru":"Peru","Ecuador":"Equador",
+  "Japan":"Japão","South Korea":"Coreia do Sul","Australia":"Austrália","Saudi Arabia":"Arábia Saudita",
+  "Qatar":"Catar","Iran":"Irã","Morocco":"Marrocos","Senegal":"Senegal","Ghana":"Gana",
+  "Cameroon":"Camarões","Nigeria":"Nigéria","Tunisia":"Tunísia","Egypt":"Egito",
+  "Algeria":"Argélia","South Africa":"África do Sul","Switzerland":"Suíça","Poland":"Polônia",
+  "Serbia":"Sérvia","Denmark":"Dinamarca","Sweden":"Suécia","Norway":"Noruega",
+  "Wales":"Galês","Scotland":"Escócia","Ukraine":"Ucrânia","Austria":"Áustria",
+  "Czech Republic":"Tchéquia","Czechia":"Tchéquia","Turkey":"Turquia","Türkiye":"Turquia",
+  "Russia":"Rússia","Greece":"Grécia","Costa Rica":"Costa Rica","Panama":"Panamá",
+  "Jamaica":"Jamaica","Honduras":"Honduras","New Zealand":"Nova Zelândia","Paraguay":"Paraguai",
+  "Venezuela":"Venezuela","Bolivia":"Bolívia","China":"China","India":"Índia","Iraq":"Iraque",
+  "Jordan":"Jordânia","UAE":"Emirados Árabes Unidos","Uzbekistan":"Usbequistão","Curaçao":"Curaçao",
+  "Haiti":"Haiti","Suriname":"Suriname","Cape Verde":"Cabo Verde","DR Congo":"RD Congo",
+  "Ivory Coast":"Costa do Marfim","Côte d'Ivoire":"Costa do Marfim"
+};
+
+// Retorna o nome do time em português, se houver tradução; senão retorna o original
+function teamNamePt(teamName){
+  return TEAM_NAME_PT[teamName] || teamName;
+}
+
+// ---------- Cache local (localStorage) para dados da ESPN/elenco ----------
+// Evita refazer chamadas lentas (thesportsdb, ESPN roster/summary) a cada visita.
+const LS_CACHE_PREFIX = "bolao2026_cache_";
+const LS_CACHE_TTL = 12 * 60 * 60 * 1000; // 12 horas
+
+function lsCacheGet(key){
+  try{
+    const raw = localStorage.getItem(LS_CACHE_PREFIX + key);
+    if(!raw) return undefined;
+    const obj = JSON.parse(raw);
+    if(!obj || typeof obj.t !== "number") return undefined;
+    const ttl = (typeof obj.ttl === "number") ? obj.ttl : LS_CACHE_TTL;
+    if(Date.now() - obj.t > ttl) return undefined;
+    return obj.v;
+  }catch(e){
+    return undefined;
+  }
+}
+function lsCacheSet(key, value, ttl){
+  try{
+    localStorage.setItem(LS_CACHE_PREFIX + key, JSON.stringify({ t: Date.now(), v: value, ttl: ttl || LS_CACHE_TTL }));
+  }catch(e){
+    // localStorage cheio ou indisponível — ignora silenciosamente
+  }
+}
+
 const rosterCache = {};
 async function fetchFullRoster(teamId){
   if(!teamId) return [];
   if(rosterCache[teamId]) return rosterCache[teamId];
+  const cached = lsCacheGet(`roster_${teamId}`);
+  if(cached){ rosterCache[teamId] = cached; return cached; }
   const target = `https://site.api.espn.com/apis/site/v2/sports/soccer/${ESPN_LEAGUE}/teams/${teamId}/roster`;
   let data;
   try{
@@ -377,18 +1509,29 @@ async function fetchFullRoster(teamId){
       if(name) players.push({ name, position: athlete.position?.abbreviation || "" });
     }
   }
-  if(players.length === 0){
-    console.warn(`Roster vazio para o time ${teamId}. Resposta da API:`, data);
-  }
   rosterCache[teamId] = players;
+  lsCacheSet(`roster_${teamId}`, players);
   return players;
 }
 
-// cache de prováveis escalações (rosters) por jogo
 const lineupCache = {};
 async function fetchLineup(game){
   const gameId = game.id;
   if(lineupCache[gameId]) return lineupCache[gameId];
+  const cachedLineup = lsCacheGet(`lineup_${gameId}`);
+  if(cachedLineup){
+    // Se o cache é do elenco completo (full:true) mas o jogo já está perto
+    // de começar (ou já rolando), a escalação titular pode já ter sido
+    // divulgada pela ESPN — descarta o cache antigo e busca de novo.
+    const gameTime = getGameDateObj(game);
+    const startingSoonOrLive = gameTime
+      ? (new Date() >= new Date(gameTime.getTime() - 60 * 60 * 1000)) // 1h antes do jogo
+      : false;
+    if(!(cachedLineup.full && startingSoonOrLive)){
+      lineupCache[gameId] = cachedLineup;
+      return cachedLineup;
+    }
+  }
   const target = `https://site.api.espn.com/apis/site/v2/sports/soccer/${ESPN_LEAGUE}/summary?event=${gameId}`;
   let data;
   try{
@@ -402,26 +1545,37 @@ async function fetchLineup(game){
       data = null;
     }
   }
-  let result = { home: [], away: [], full: false };
+  let result = { home: [], away: [], homeBench: [], awayBench: [], homeFormation: "", awayFormation: "", full: false };
   if(data){
     const rosters = data.rosters || [];
     for(const r of rosters){
       const side = r.homeAway === "home" ? "home" : "away";
-      const players = (r.roster || [])
+      const benchSide = side === "home" ? "homeBench" : "awayBench";
+      const formationSide = side === "home" ? "homeFormation" : "awayFormation";
+      const all = r.roster || [];
+      const players = all
         .filter(p => p.starter)
-        .map(p => ({ name: p.athlete?.displayName, position: p.position?.abbreviation || "" }))
+        .map(p => {
+          const rawPos = p.athlete?.position?.abbreviation || p.athlete?.position?.name || p.position?.abbreviation || "";
+          return { name: p.athlete?.displayName, position: rawPos };
+        })
+        .filter(p => p.name);
+      const bench = all
+        .filter(p => !p.starter)
+        .map(p => ({ name: p.athlete?.displayName }))
         .filter(p => p.name);
       result[side] = players;
+      result[benchSide] = bench;
+      result[formationSide] = r.formation || "";
     }
   }
 
-  // se a escalação titular ainda não saiu, busca o elenco completo de cada seleção
   if(result.home.length === 0 && result.away.length === 0){
     const [homeFull, awayFull] = await Promise.all([
       fetchFullRoster(game.homeId),
       fetchFullRoster(game.awayId)
     ]);
-    result = { home: homeFull, away: awayFull, full: true };
+    result = { home: homeFull, away: awayFull, homeBench: [], awayBench: [], homeFormation: "", awayFormation: "", full: true };
   }
 
   if(result.home.length === 0 && result.away.length === 0){
@@ -429,7 +1583,32 @@ async function fetchLineup(game){
     return null;
   }
   lineupCache[gameId] = result;
+  // Escalação confirmada (full:false) muda perto do jogo, então cache mais curto (30min).
+  // Elenco completo (full:true) muda raramente, cache padrão (12h).
+  const ttl = result.full ? LS_CACHE_TTL : (30 * 60 * 1000);
+  lsCacheSet(`lineup_${gameId}`, result, ttl);
   return result;
+}
+
+
+const playerPhotoCache = {};
+
+async function getPlayerPhoto(playerName){
+  if(playerPhotoCache[playerName]) return playerPhotoCache[playerName];
+  const cached = lsCacheGet(`photo_${playerName}`);
+  if(cached !== undefined){ playerPhotoCache[playerName] = cached; return cached; }
+  try{
+    const url = `https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?p=${encodeURIComponent(playerName)}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    const photo = data?.player?.[0]?.strCutout || data?.player?.[0]?.strThumb || "";
+    playerPhotoCache[playerName] = photo;
+    // Cache de fotos por mais tempo (7 dias) — fotos de jogadores quase não mudam
+    lsCacheSet(`photo_${playerName}`, photo, 7 * 24 * 60 * 60 * 1000);
+    return photo;
+  }catch(e){
+    return "";
+  }
 }
 
 let currentUser = "";
@@ -443,17 +1622,110 @@ async function sha256Hex(str){
 }
 
 // ---------- Tabs ----------
-document.querySelectorAll(".tab").forEach(tab=>{
-  tab.addEventListener("click", ()=>{
-    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-    tab.classList.add("active");
-    document.getElementById("tab-palpites").style.display = tab.dataset.tab==="palpites" ? "block":"none";
-    document.getElementById("tab-ranking").style.display = tab.dataset.tab==="ranking" ? "block":"none";
-    document.getElementById("tab-admin-all").style.display = tab.dataset.tab==="admin-all" ? "block":"none";
-    if(tab.dataset.tab==="ranking") renderRanking();
-    if(tab.dataset.tab==="admin-all") renderAllPredictions();
+function getVisibleTabOrder(){
+  return Array.from(document.querySelectorAll(".tab")).filter(t=>t.style.display !== "none");
+}
+
+function activateTab(tab, direction){
+  // direction: "next" (deslizou pra esquerda, vai pra próxima aba -> entra da direita)
+  //            "prev" (deslizou pra direita, vai pra aba anterior -> entra da esquerda)
+  //            null/undefined (clique normal, sem slide)
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  tab.classList.add("active");
+
+  const panels = {
+    palpites: document.getElementById("tab-palpites"),
+    ranking: document.getElementById("tab-ranking"),
+    desempenho: document.getElementById("tab-desempenho"),
+    "admin-all": document.getElementById("tab-admin-all")
+  };
+
+  const slideClass = direction === "next" ? "slide-in-right"
+                    : direction === "prev" ? "slide-in-left"
+                    : null;
+
+  let activePanel = null;
+
+  Object.entries(panels).forEach(([key, el])=>{
+    el.classList.remove("slide-in-right", "slide-in-left");
+    if(key === tab.dataset.tab){
+      el.style.display = "block";
+      activePanel = el;
+      if(slideClass){
+        // esconde o conteúdo até ele estar pronto, evitando "pulo" cru
+        el.style.opacity = "0";
+      }
+    } else {
+      el.style.display = "none";
+    }
   });
+
+  const saveAllWrap = document.getElementById("saveAllWrap");
+  if(saveAllWrap) saveAllWrap.style.display = (tab.dataset.tab === "palpites") ? "flex" : "none";
+
+  const applyAnim = ()=>{
+    if(!activePanel || !slideClass) return;
+    activePanel.style.opacity = "";
+    void activePanel.offsetWidth; // reinicia a animação
+    activePanel.classList.add(slideClass);
+  };
+
+  if(tab.dataset.tab==="ranking"){
+    renderRanking().then(applyAnim);
+  } else if(tab.dataset.tab==="desempenho"){
+    renderDesempenho().then(applyAnim);
+  } else if(tab.dataset.tab==="admin-all"){
+    renderAllPredictions().then(applyAnim);
+  } else {
+    applyAnim();
+  }
+}
+
+document.querySelectorAll(".tab").forEach(tab=>{
+  tab.addEventListener("click", ()=> activateTab(tab, null));
 });
+
+// ---------- Swipe entre abas (mobile) ----------
+(function(){
+  const container = document.querySelector(".container");
+  if(!container) return;
+
+  let startX = 0, startY = 0, tracking = false;
+  const THRESHOLD = 50; // px mínimos para considerar swipe
+
+  container.addEventListener("touchstart", (e)=>{
+    if(e.touches.length !== 1) return;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    tracking = true;
+  }, {passive:true});
+
+  container.addEventListener("touchend", (e)=>{
+    if(!tracking) return;
+    tracking = false;
+    const endX = e.changedTouches[0].clientX;
+    const endY = e.changedTouches[0].clientY;
+    const dx = endX - startX;
+    const dy = endY - startY;
+
+    // ignora se o gesto foi mais vertical (scroll) que horizontal
+    if(Math.abs(dx) < THRESHOLD || Math.abs(dx) < Math.abs(dy)) return;
+
+    const tabs = getVisibleTabOrder();
+    const activeIndex = tabs.findIndex(t=>t.classList.contains("active"));
+    if(activeIndex === -1) return;
+
+    if(dx < 0){
+      // arrastou para a esquerda -> próxima aba
+      const next = tabs[activeIndex + 1];
+      if(next) activateTab(next, "next");
+    } else {
+      // arrastou para a direita -> aba anterior
+      const prev = tabs[activeIndex - 1];
+      if(prev) activateTab(prev, "prev");
+    }
+  }, {passive:true});
+})();
 
 // ---------- Login / Cadastro ----------
 async function tentarLoginAutomatico(){
@@ -486,7 +1758,7 @@ async function fazerLogin(){
   }
 
   if(!fbReady){
-    msg.textContent = "⚠️ O Firebase ainda não foi configurado. Edite o arquivo HTML e preencha o objeto firebaseConfig com os dados do seu projeto Firebase (veja o comentário no início do <script>).";
+    msg.textContent = "⚠️ O Firebase ainda não foi configurado. Edite o arquivo HTML e preencha o objeto firebaseConfig com os dados do seu projeto Firebase.";
     return;
   }
 
@@ -497,9 +1769,7 @@ async function fazerLogin(){
   try{
     const r = await window.storage.get(userKey, true);
     if(r) existing = JSON.parse(r.value);
-  }catch(e){
-    // chave ainda não existe -> usuário novo, segue o fluxo normalmente
-  }
+  }catch(e){}
 
   if(existing){
     if(existing.passHash !== hash){
@@ -507,13 +1777,12 @@ async function fazerLogin(){
       return;
     }
   } else {
-    // primeiro acesso com esse nome: cadastra a senha
     existing = { name, passHash: hash };
     try{
       const res1 = await window.storage.set(userKey, JSON.stringify(existing), true);
       const res2 = await window.storage.set(`name:${slug(name)}`, name, true);
       if(!res1 || !res2){
-        msg.textContent = "Erro ao cadastrar (armazenamento recusou salvar). Tente novamente em alguns segundos.";
+        msg.textContent = "Erro ao cadastrar. Tente novamente.";
         return;
       }
     }catch(e){
@@ -547,29 +1816,116 @@ async function entrarNoApp(){
   if(isAdmin){
     document.getElementById("tabAdminAll").style.display = "block";
     document.getElementById("adminToggle").style.display = "block";
+    document.getElementById("bonusToggle").style.display = "block";
   }
   await loadAndRenderGames();
 }
 
-// ---------- Render jogos ----------
+// ---------- Render barra de datas ----------
+function renderDateBar(){
+  const bar = document.getElementById("dateBar");
+  if(!bar) return;
+
+  const now = new Date();
+  const days = [-1, 0, 1].map(offset=>{
+    const d = new Date(now);
+    d.setDate(d.getDate() + offset);
+    return d;
+  });
+
+  if(!selectedDateStr){
+    selectedDateStr = days[1].toLocaleDateString("pt-BR"); // hoje
+  }
+
+  const WEEKDAYS = ["DOM","SEG","TER","QUA","QUI","SEX","SÁB"];
+  const labels = ["ONTEM","HOJE","AMANHÃ"];
+
+  bar.innerHTML = "";
+  days.forEach((d,i)=>{
+    const dateStr = d.toLocaleDateString("pt-BR");
+    const pill = document.createElement("div");
+    pill.className = "date-pill" + (dateStr === selectedDateStr ? " active" : "");
+    pill.innerHTML = `
+      <span class="date-pill-label">${labels[i]}</span>
+      <span class="date-pill-day">${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')}</span>
+      <span class="date-pill-label">${WEEKDAYS[d.getDay()]}</span>
+    `;
+    pill.addEventListener("click", ()=>{
+      selectedDateStr = dateStr;
+      loadAndRenderGames();
+    });
+    bar.appendChild(pill);
+  });
+}
+
+// ---------- Trava do marcador do 1º gol quando o placar é 0x0 ----------
+function isZeroZero(game){
+  const h = document.getElementById(`home-${game.id}`);
+  const a = document.getElementById(`away-${game.id}`);
+  if(!h || !a) return false;
+  return h.value === "0" && a.value === "0";
+}
+
+function updatePitchLock(game){
+  const wrap = document.getElementById(`pitch-${game.id}`);
+  const hidden = document.getElementById(`scorer-${game.id}`);
+  if(!wrap) return;
+  const zero = isZeroZero(game);
+
+  wrap.querySelectorAll(".player-token, .no-goal-btn").forEach(el=>{
+    if(zero){
+      el.style.opacity = "0.35";
+      el.style.pointerEvents = "none";
+      el.style.cursor = "not-allowed";
+    } else {
+      el.style.opacity = "";
+      el.style.pointerEvents = "";
+      el.style.cursor = "pointer";
+    }
+  });
+
+
+
+  if(zero && hidden && hidden.value !== ""){
+    hidden.value = "";
+    wrap.querySelectorAll(".player-token, .no-goal-btn").forEach(el=>{
+      el.classList.remove("selected");
+      const ball = el.querySelector(".ball-mark");
+      if(ball) ball.remove();
+    });
+    const fullNameEl = document.getElementById(`scorer-fullname-${game.id}`);
+    if(fullNameEl) fullNameEl.textContent = "";
+    const cur = unsavedPreds[game.id] || { home: hidden ? "" : "", away: "", scorer: "" };
+    cur.scorer = "";
+    unsavedPreds[game.id] = cur;
+  }
+}
+
+
 async function loadAndRenderGames(){
   const list = document.getElementById("gamesList");
   list.innerHTML = "";
+
+  renderDateBar();
+
+  // Identificador desta chamada. Se outra chamada mais recente começar
+  // antes desta terminar, esta deve abortar para não escrever jogos
+  // do dia errado na tela (corrida entre cliques rápidos nas abas de data).
+  const myRequestId = ++renderRequestId;
 
   if(!GAMES || GAMES.length === 0){
     list.innerHTML = `<div class="empty">⚠️ Nenhum jogo foi carregado da ESPN. Veja o console (F12) pra detalhes do erro.</div>`;
     return;
   }
 
-  // filtra jogos do dia de hoje; se não houver nenhum, mostra os próximos
-  const todayStr = new Date().toLocaleDateString("pt-BR");
-  let gamesToShow = GAMES.filter(g => g.date.startsWith(todayStr));
+  let gamesToShow = GAMES.filter(g => g.date.startsWith(selectedDateStr));
   if(gamesToShow.length === 0){
-    gamesToShow = GAMES.slice(0, 10);
-    list.innerHTML = `<div class="empty" style="padding:8px;">Nenhum jogo hoje. Mostrando os próximos jogos:</div>`;
+    list.innerHTML = `<div class="empty" style="padding:8px;">Nenhum jogo nesse dia.</div>`;
+    return;
   }
 
   for(const game of gamesToShow){
+    if(myRequestId !== renderRequestId) return; // chamada mais nova já está em andamento
     let pred = null;
     try{
       const r = await window.storage.get(`pred:${slug(currentUser)}:${game.id}`, true);
@@ -582,29 +1938,153 @@ async function loadAndRenderGames(){
       if(r) result = JSON.parse(r.value);
     }catch(e){}
 
+    // Agora validamos o bloqueio se o tempo passou OU se já existe um resultado
+    const locked = isGameLocked(game) || result !== null; 
+    const liveInfo = LIVE[game.id];
+    
+    // Controle das mensagens de status do jogo
+    let lockMsg = "";
+    if (result) {
+      lockMsg = `<div style="font-size:.85rem;color:#ff8080;margin-top:6px;text-align:center;font-weight:bold;background:rgba(0,0,0,0.3);padding:8px;border-radius:8px;">
+                   Palpites encerrados — jogo finalizado<br>
+                   <span style="color:#fff;display:block;margin-top:4px;">Placar Real: ${result.home} x ${result.away}</span>
+                   ${result.scorer ? `<span style="color:var(--gold);display:block;margin-top:2px;"><img class="ball-icon" src="https://res.cloudinary.com/adidas-app/image/upload/c_limit,h_2532,q_auto:good,w_2532/v1/page-assets/40/hczyjk8eeryat5dh9fhp.png" alt="bola"> 1º Gol: ${result.scorer}</span>` : ""}
+                 </div>`;
+    } else if (liveInfo) {
+      lockMsg = renderLiveBox(game, liveInfo);
+    } else if (locked) {
+      lockMsg = `<div style="font-size:.75rem;color:#ff8080;margin-top:4px;text-align:center;">Palpites encerrados — jogo em andamento</div>`;
+    }
+
+    // Se o usuário já alterou algo nesta partida (mas não salvou ainda),
+    // usamos esses valores em vez dos salvos, para não perder o que digitou.
+    const draft = unsavedPreds[game.id];
+    const effPred = draft || pred;
+
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = `
       <div class="game-header">
         <span>${game.group} • ${game.date}</span>
-        ${result ? '<span class="badge">Resultado lançado</span>' : ''}
+        <span>
+          ${pred ? '<span class="badge badge-sent" title="Palpite enviado">✅ Palpite enviado</span>' : ''}
+          ${result ? '<span class="badge">Resultado lançado</span>' : ''}
+        </span>
       </div>
-      <div class="teams">
-        <div class="team">${flagImg(game.home)}${game.home}</div>
-        <input type="number" min="0" class="score-input" id="home-${game.id}" value="${pred?pred.home:''}" placeholder="0">
-        <div class="vs">x</div>
-        <input type="number" min="0" class="score-input" id="away-${game.id}" value="${pred?pred.away:''}" placeholder="0">
-        <div class="team">${flagImg(game.away)}${game.away}</div>
+      ${(result && pred) ? `<div class="status" style="color:#7be38a;font-weight:bold;text-align:center;font-size:.9rem;margin-bottom:8px;">🎯 Você fez ${calcPoints(pred,result).total} pontos neste jogo!</div>` : ''}
+      <div id="status-${game.id}">${lockMsg}</div>
+      <div class="scoreboard" style="${result ? 'margin-top:12px;' : ''}">
+        <div class="scoreboard-team">
+          <img class="flag-big" src="https://flagcdn.com/w160/${COUNTRY_CODES[game.home]||'xx'}.png" alt="${game.home}" onerror="this.style.display='none'">
+          <span class="abbr">${teamAbbr(game.home)}</span>
+        </div>
+        <div class="scoreboard-score">
+          <div class="score-stepper">
+            <button type="button" class="score-arrow score-arrow-up" data-target="home-${game.id}" ${locked?'disabled':''} aria-label="Aumentar placar">▲</button>
+            <input type="number" min="0" class="scoreboard-score-input" id="home-${game.id}" value="${effPred?effPred.home:''}" placeholder="0" ${locked?'disabled style="opacity:.45;cursor:not-allowed;"':''}>
+            <button type="button" class="score-arrow score-arrow-down" data-target="home-${game.id}" ${locked?'disabled':''} aria-label="Diminuir placar">▼</button>
+          </div>
+          <span class="scoreboard-x">×</span>
+          <div class="score-stepper">
+            <button type="button" class="score-arrow score-arrow-up" data-target="away-${game.id}" ${locked?'disabled':''} aria-label="Aumentar placar">▲</button>
+            <input type="number" min="0" class="scoreboard-score-input" id="away-${game.id}" value="${effPred?effPred.away:''}" placeholder="0" ${locked?'disabled style="opacity:.45;cursor:not-allowed;"':''}>
+            <button type="button" class="score-arrow score-arrow-down" data-target="away-${game.id}" ${locked?'disabled':''} aria-label="Diminuir placar">▼</button>
+          </div>
+        </div>
+        <div class="scoreboard-team">
+          <img class="flag-big" src="https://flagcdn.com/w160/${COUNTRY_CODES[game.away]||'xx'}.png" alt="${game.away}" onerror="this.style.display='none'">
+          <span class="abbr">${teamAbbr(game.away)}</span>
+        </div>
       </div>
-      <label class="small">Quem marca o 1º gol da partida?</label>
-      <input type="hidden" id="scorer-${game.id}" value="${pred?pred.scorer:''}">
-      <div id="pitch-${game.id}"><div class="empty" style="padding:10px;">Carregando jogadores...</div></div>
-      ${result ? `<div class="status">📊 Resultado real: ${result.home} x ${result.away}${result.scorer?` • 1º gol: ${result.scorer}`:''}${pred?` — Você fez ${calcPoints(pred,result).total} pts</div>`:''}` : ''}
-      ${result ? '' : `<div class="save-row"><span class="saved-tag" id="saved-${game.id}"></span><button data-id="${game.id}">Salvar palpite</button></div>`}
+      <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-bottom:8px;">
+        <span>${teamNamePt(game.home)}</span>
+        <span>${teamNamePt(game.away)}</span>
+      </div>
+      <div class="expand-toggle" id="toggle-${game.id}">
+        <span>Ver jogadores e palpite do 1º gol</span><span class="chevron">▾</span>
+      </div>
+      <div class="pred-collapse" id="collapse-${game.id}">
+        <label class="small">Quem marca o 1º gol da partida?</label>
+        <input type="hidden" id="scorer-${game.id}" value="${effPred?effPred.scorer:''}">
+        <div id="pitch-${game.id}">
+          <div id="scorer-fullname-${game.id}" style="font-size:.8rem;color:var(--gold);text-align:center;margin:6px 0 4px;min-height:1.1em;font-weight:600;">${(!locked && !(effPred && effPred.scorer)) ? `<span class="scorer-hint"><span class="hint-arrow">👇</span> Toque no jogador que vai marcar o 1º gol</span>` : (effPred && effPred.scorer ? `<b style="color:#fff;">${effPred.scorer}</b> <span style="color:#fff;">marca o 1º gol</span>` : "")}</div>
+          <div class="empty" style="padding:10px;">Carregando jogadores...</div>
+        </div>
+      </div>
     `;
     list.appendChild(card);
 
-    // carrega a provável escalação (ou elenco completo) e desenha o campo
+    // Toggle de expansão do card (mostra/oculta jogadores e palpite do 1º gol)
+    const toggleEl = document.getElementById(`toggle-${game.id}`);
+    const collapseEl = document.getElementById(`collapse-${game.id}`);
+    if(toggleEl && collapseEl){
+      toggleEl.addEventListener("click", ()=>{
+        const isOpen = collapseEl.classList.contains("open");
+        if(isOpen){
+          collapseEl.style.maxHeight = collapseEl.scrollHeight + "px";
+          requestAnimationFrame(()=>{ collapseEl.style.maxHeight = "0px"; });
+          collapseEl.classList.remove("open");
+          toggleEl.classList.remove("open");
+          toggleEl.querySelector("span").textContent = "Ver jogadores e palpite do 1º gol";
+        } else {
+          collapseEl.classList.add("open");
+          toggleEl.classList.add("open");
+          collapseEl.style.maxHeight = collapseEl.scrollHeight + "px";
+          toggleEl.querySelector("span").textContent = "Ocultar jogadores e palpite do 1º gol";
+          // Leva o usuário até o início da área que acabou de abrir, já que
+          // ela some abaixo da tela e muita gente não percebia que tinha
+          // que rolar pra escolher o marcador do 1º gol.
+          setTimeout(()=>{
+            toggleEl.scrollIntoView({ behavior: "smooth", block: "start" });
+          }, 380);
+        }
+      });
+    }
+
+
+    // Guarda alterações de placar enquanto o usuário digita, para preservar
+    // ao trocar de dia sem salvar.
+    if(!locked){
+      const homeInput = document.getElementById(`home-${game.id}`);
+      const awayInput = document.getElementById(`away-${game.id}`);
+      const syncDraft = ()=>{
+        const cur = unsavedPreds[game.id] || { home: effPred?effPred.home:'', away: effPred?effPred.away:'', scorer: effPred?effPred.scorer:'' };
+        cur.home = homeInput.value;
+        cur.away = awayInput.value;
+        unsavedPreds[game.id] = cur;
+        updatePitchLock(game);
+      };
+      homeInput.addEventListener("input", ()=>{
+        if(awayInput.value === ""){ awayInput.value = "0"; }
+        syncDraft();
+      });
+      awayInput.addEventListener("input", ()=>{
+        if(homeInput.value === ""){ homeInput.value = "0"; }
+        syncDraft();
+      });
+
+      // Setas para incrementar/decrementar o placar
+      card.querySelectorAll(".score-arrow").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const target = document.getElementById(btn.dataset.target);
+          if(!target) return;
+          let val = parseInt(target.value, 10);
+          if(isNaN(val)) val = 0;
+          if(btn.classList.contains("score-arrow-up")){
+            val += 1;
+          } else {
+            val = Math.max(0, val - 1);
+          }
+          target.value = val;
+          target.dispatchEvent(new Event("input", { bubbles: true }));
+        });
+      });
+    }
+
+    // ... (o restante do código fetchLineup continua igualzinho daqui para baixo)
+	
+	
+
     fetchLineup(game).then(lineup => {
       const wrap = document.getElementById(`pitch-${game.id}`);
       const hidden = document.getElementById(`scorer-${game.id}`);
@@ -617,59 +2097,180 @@ async function loadAndRenderGames(){
 
       const POS_ORDER = ["GK","DEF","MID","FWD"];
       const POS_PT = {
-        G:"GOL", GK:"GOL",
-        D:"ZAG", DF:"ZAG", CB:"ZAG", LB:"LAT", RB:"LAT", WB:"LAT", "LWB":"LAT", "RWB":"LAT",
-        M:"MEI", MF:"MEI", CM:"MEI", DM:"VOL", AM:"MEI", LM:"MEI", RM:"MEI",
-        F:"ATA", FW:"ATA", ST:"ATA", CF:"ATA", LW:"ATA", RW:"ATA"
+        // abbreviations
+        G:"GOL", GK:"GOL", GOALKEEPER:"GOL",
+        D:"ZAG", DF:"ZAG", CB:"ZAG", CD:"ZAG", "CD-L":"ZAG", "CD-R":"ZAG",
+        LB:"LE", RB:"LD", WB:"LAT", LWB:"LE", RWB:"LD",
+        DEFENDER:"DEF", DEFENCE:"DEF",
+        M:"MEI", MF:"MEI", CM:"MC", "CM-L":"ME", "CM-R":"MD", DM:"VOL", AM:"MEA",
+        LM:"ME", RM:"MD", MIDFIELDER:"MEI", MIDFIELD:"MEI",
+        F:"ATA", FW:"ATA", ST:"CA", CF:"CA", LW:"PE", RW:"PD", LF:"PE", RF:"PD",
+        "CF-L":"CF-L", "CF-R":"CF-R", "CF-C":"CA",
+        FORWARD:"ATA", ATTACKER:"ATA", STRIKER:"CA"
       };
       function posPt(pos, groupK){
-        const code = (pos||"").toUpperCase();
+        const code = (pos||"").toUpperCase().trim();
         if(POS_PT[code]) return POS_PT[code];
-        const fallback = { GK:"GOL", DEF:"ZAG", MID:"MEI", FWD:"ATA" };
-        return fallback[groupK] || "";
+        const fallback = { GK:"GOL", DEF:"DEF", MID:"MEI", FWD:"ATA" };
+        return fallback[groupK] || (code.length <= 5 ? code : "") || groupK || "";
       }
+      const POS_GROUP = {
+        G:"GK", GK:"GK", GOALKEEPER:"GK",
+        D:"DEF", DF:"DEF", CB:"DEF", CD:"DEF", "CD-L":"DEF", "CD-R":"DEF",
+        LB:"DEF", RB:"DEF", WB:"DEF", LWB:"DEF", RWB:"DEF",
+        DEFENDER:"DEF", DEFENCE:"DEF",
+        M:"MID", MF:"MID", CM:"MID", "CM-L":"MID", "CM-R":"MID", DM:"MID", AM:"MID", LM:"MID", RM:"MID",
+        "CF-L":"MID", "CF-R":"MID",
+        MIDFIELDER:"MID", MIDFIELD:"MID",
+        F:"FWD", FW:"FWD", ST:"FWD", CF:"FWD", LW:"FWD", RW:"FWD", LF:"FWD", RF:"FWD", S:"FWD",
+        "CF-C":"FWD",
+        FORWARD:"FWD", ATTACKER:"FWD", STRIKER:"FWD"
+      };
       function groupKey(pos){
-        const p = (pos||"").toUpperCase();
+        const p = (pos||"").toUpperCase().trim();
+        if(POS_GROUP[p]) return POS_GROUP[p];
         if(p.startsWith("G")) return "GK";
-        if(p.startsWith("D")) return "DEF";
-        if(p.startsWith("M")) return "MID";
-        if(p.startsWith("F") || p.startsWith("S") || p==="ST") return "FWD";
+        if(p.startsWith("D") || p.startsWith("CD")) return "DEF";
+        if(p.startsWith("M") || p.startsWith("CM")) return "MID";
+        if(p.startsWith("F") || p.startsWith("A") || p.startsWith("S")) return "FWD";
         return "OTHER";
       }
 
-      function buildTeam(players, teamName, flipRows){
-        const groups = { GK:[], DEF:[], MID:[], FWD:[], OTHER:[] };
-        players.forEach(p => groups[groupKey(p.position)].push(p));
-        let order = POS_ORDER.slice();
-        if(flipRows) order = order.slice().reverse(); // ataque do "away" fica embaixo, perto do meio
-        const rowsHtml = order.map(k => {
-          if(groups[k].length === 0) return "";
-          const tokens = groups[k].map(p => `
+      // Horizontal order (left side of pitch -> right side), lower = more left
+      const POS_X_ORDER = {
+        LB:0, LWB:0, LM:0, LW:0, LF:0, "CD-L":0.5, "CM-L":0.5, "CF-L":0,
+        CB:1, DM:1, CM:1, CF:1, D:1, DF:1, CD:1, M:1, MF:1, F:1, FW:1, ST:1, AM:1.5, "CF-C":1,
+        "CD-R":1.5, "CM-R":1.5, "CF-R":2,
+        RB:2, RWB:2, RM:2, RW:2, RF:2
+      };
+      function sortRowByPosition(row){
+        return row.slice().sort((a,b)=>{
+          const ax = POS_X_ORDER[(a.position||"").toUpperCase()] ?? 1;
+          const bx = POS_X_ORDER[(b.position||"").toUpperCase()] ?? 1;
+          return ax - bx;
+        });
+      }
+
+      function rowsFromFormation(players, formation){
+        // formation e.g. "4-1-4-1" -> defense/mid-lines/attack, GK assumed separate
+        const parts = (formation||"").split("-").map(n=>parseInt(n,10)).filter(n=>!isNaN(n) && n>0);
+        const total = parts.reduce((a,b)=>a+b,0);
+        if(total !== 10) return null; // formation doesn't match outfield count, fallback
+
+        const gk = players.find(p => groupKey(p.position) === "GK");
+        const outfield = players.filter(p => p !== gk);
+        if(!gk || outfield.length !== 10) return null;
+
+        // Group outfield players by role
+        const defPool = outfield.filter(p => groupKey(p.position) === "DEF");
+        // Sort midfielders by depth: defensive (DM) first, then central, then attacking (AM)
+        const MID_DEPTH = { DM:0, M:1, MF:1, CM:1, "CM-L":1, "CM-R":1, LM:1, RM:1, AM:2, "CF-L":2, "CF-R":2 };
+        const midPool = outfield.filter(p => groupKey(p.position) === "MID")
+          .sort((a,b) => (MID_DEPTH[(a.position||"").toUpperCase()] ?? 1) - (MID_DEPTH[(b.position||"").toUpperCase()] ?? 1));
+        const fwdPool = outfield.filter(p => groupKey(p.position) === "FWD");
+        const otherPool = outfield.filter(p => groupKey(p.position) === "OTHER");
+
+        // First formation number = defense line, last = attack line, middle = midfield lines
+        const numLines = parts.length;
+        const rows = [[gk]];
+        for(let i=0;i<numLines;i++){
+          const count = parts[i];
+          let pool;
+          if(i === 0) pool = defPool;
+          else if(i === numLines-1) pool = fwdPool;
+          else pool = midPool;
+
+          // For midfield lines: earlier lines (closer to defense) get more defensive players first
+          let line = pool.splice(0, count);
+          // if pool ran short, borrow from leftover/other pools
+          while(line.length < count){
+            const extra = midPool.length ? midPool.shift()
+              : defPool.length ? defPool.shift()
+              : fwdPool.length ? fwdPool.shift()
+              : otherPool.shift();
+            if(!extra) break;
+            line.push(extra);
+          }
+          rows.push(line);
+        }
+        return rows; // ordered GK -> DEF -> ... -> FWD
+      }
+
+      function buildTeam(players, teamName, flipRows, bench, formation){
+        bench = bench || [];
+
+        let rows = rowsFromFormation(players, formation);
+        if(!rows){
+          const groups = { GK:[], DEF:[], MID:[], FWD:[], OTHER:[] };
+          players.forEach(p => groups[groupKey(p.position)].push(p));
+          let order = POS_ORDER.slice();
+          rows = order.map(k => groups[k]).filter(r => r.length > 0);
+        }
+        if(flipRows) rows = rows.slice().reverse();
+
+        const rowsHtml = rows.map(row => {
+          if(!row.length) return "";
+          let sorted = sortRowByPosition(row);
+          if(flipRows) sorted = sorted.slice().reverse();
+          const tokens = sorted.map(p => `
             <div class="player-token" data-name="${p.name}">
-              ${p.name}<span class="pos">${posPt(p.position, k)}</span>
+              <span class="name-label">${p.name}</span><span class="pos">${posPt(p.position, groupKey(p.position))}</span>
             </div>`).join("");
-          return `<div class="pitch-row">${tokens}</div>`;
+          const rowStyle = sorted.length === 1 ? ' style="justify-content:center;"' : '';
+          return `<div class="pitch-row"${rowStyle}>${tokens}</div>`;
         }).join("");
-        const reservesHtml = groups.OTHER.length ? `
-          <div class="reserves">Outros: ${groups.OTHER.map(p=>`<span class="player-token" data-name="${p.name}">${p.name}</span>`).join(" ")}</div>` : "";
+        const reservesHtml = (!lineup.full && bench.length) ? `
+          <details class="bench-list">
+            <summary>Reservas (${bench.length})</summary>
+            <div class="bench-grid">
+              ${bench.map(p=>`<span class="player-token" data-name="${p.name}"><span class="bench-name">${p.name}</span></span>`).join("")}
+            </div>
+          </details>` : "";
+        const formationLabel = formation ? `<span class="formation-tag">${formation}</span>` : "";
+        const confirmedClass = !lineup.full ? ' confirmed-lineup' : '';
         return `
-          <div class="pitch-team-label">${flagImg(teamName)}${teamName}${lineup.full?' (elenco completo)':''}</div>
-          <div class="pitch">
+          <div class="pitch-team-label">${flagImg(teamName)}${teamNamePt(teamName)}${lineup.full?' (elenco completo)':''}${formationLabel}</div>
+          <div class="pitch${confirmedClass}">
             <svg class="pitch-lines" viewBox="0 0 300 400" preserveAspectRatio="none">
-              <g fill="none" stroke="#ffffff" stroke-opacity="0.6" stroke-width="2">
-                <rect x="3" y="3" width="294" height="394"/>
-                <line x1="3" y1="200" x2="297" y2="200"/>
-                <circle cx="150" cy="200" r="45"/>
-                <circle cx="150" cy="200" r="2.5" fill="#ffffff"/>
-                <rect x="65" y="3" width="170" height="58"/>
-                <rect x="115" y="3" width="70" height="22"/>
-                <circle cx="150" cy="78" r="2.5" fill="#ffffff"/>
-                <path d="M108,61 A42,42 0 0 0 192,61"/>
-                <rect x="65" y="339" width="170" height="58"/>
-                <rect x="115" y="375" width="70" height="22"/>
-                <circle cx="150" cy="322" r="2.5" fill="#ffffff"/>
-                <path d="M108,339 A42,42 0 0 1 192,339"/>
+              <!-- Listras do gramado -->
+              <g>
+                <rect x="0" y="0" width="300" height="40" fill="#1f5c25"/>
+                <rect x="0" y="40" width="300" height="40" fill="#1b4d20"/>
+                <rect x="0" y="80" width="300" height="40" fill="#1f5c25"/>
+                <rect x="0" y="120" width="300" height="40" fill="#1b4d20"/>
+                <rect x="0" y="160" width="300" height="40" fill="#1f5c25"/>
+                <rect x="0" y="200" width="300" height="40" fill="#1b4d20"/>
+                <rect x="0" y="240" width="300" height="40" fill="#1f5c25"/>
+                <rect x="0" y="280" width="300" height="40" fill="#1b4d20"/>
+                <rect x="0" y="320" width="300" height="40" fill="#1f5c25"/>
+                <rect x="0" y="360" width="300" height="40" fill="#1b4d20"/>
               </g>
+              <g fill="none" stroke="#ffffff" stroke-opacity="0.85" stroke-width="2">
+  <rect x="3" y="3" width="294" height="394"/>
+
+  <!-- Linha do meio -->
+  <line x1="3" y1="200" x2="297" y2="200"/>
+  <circle cx="150" cy="200" r="45"/>
+  <circle cx="150" cy="200" r="2.5" fill="#ffffff"/>
+
+  <!-- Área superior -->
+  <rect x="65" y="3" width="170" height="58"/>
+  <rect x="115" y="3" width="70" height="22"/>
+  <circle cx="150" cy="78" r="2.5" fill="#ffffff"/>
+  <path d="M108,61 A42,42 0 0 0 192,61"/>
+
+  <!-- Área inferior -->
+  <rect x="65" y="339" width="170" height="58"/>
+  <rect x="115" y="375" width="70" height="22"/>
+  <circle cx="150" cy="322" r="2.5" fill="#ffffff"/>
+  <path d="M108,339 A42,42 0 0 1 192,339"/>
+
+  <!-- Arcos de escanteio -->
+  <path d="M3,15 A12,12 0 0 0 15,3"/>
+  <path d="M285,3 A12,12 0 0 0 297,15"/>
+  <path d="M297,385 A12,12 0 0 0 285,397"/>
+  <path d="M15,397 A12,12 0 0 0 3,385"/>
+</g>
             </svg>
             ${rowsHtml}
           </div>
@@ -677,14 +2278,87 @@ async function loadAndRenderGames(){
         `;
       }
 
+      // Ambos invertidos: ataque sempre no topo, goleiro no fundo
+      const homeHtml = lineup.home.length ? buildTeam(lineup.home, game.home, true, lineup.homeBench, lineup.homeFormation) : '';
+      const awayHtml = lineup.away.length ? buildTeam(lineup.away, game.away, true, lineup.awayBench, lineup.awayFormation) : '';
+
+      const bothTeams = homeHtml && awayHtml;
+
+      // Captura o hint atual antes de sobrescrever o wrap
+      const hintEl = document.getElementById(`scorer-fullname-${game.id}`);
+      const hintHtml = hintEl ? hintEl.outerHTML : `<div id="scorer-fullname-${game.id}" style="font-size:.8rem;color:var(--gold);text-align:center;margin:6px 0 4px;min-height:1.1em;font-weight:600;"></div>`;
+
       let html = `<div class="pitch-wrap">`;
-      if(lineup.home.length) html += buildTeam(lineup.home, game.home, false);
-      if(lineup.away.length) html += buildTeam(lineup.away, game.away, true);
-      html += `<button type="button" class="no-goal-btn" data-name="ninguém">⚽ Ninguém marca (0x0)</button>`;
+
+      if(bothTeams){
+        const homeFlag = flagImg(game.home);
+        const awayFlag = flagImg(game.away);
+        const homeName = teamNamePt(game.home);
+        const awayName = teamNamePt(game.away);
+        const tabId = `lineup-tab-${game.id}`;
+        html += `
+          <div class="lineup-tabs" id="${tabId}">
+            <button class="lineup-tab-btn active" data-panel="lp-home-${game.id}">${homeFlag}${homeName}</button>
+            <button class="lineup-tab-btn" data-panel="lp-away-${game.id}">${awayFlag}${awayName}</button>
+          </div>
+          ${hintHtml}
+          <div class="lineup-panel active" id="lp-home-${game.id}">${homeHtml}</div>
+          <div class="lineup-panel" id="lp-away-${game.id}">${awayHtml}</div>
+        `;
+      } else {
+        html += hintHtml + homeHtml + awayHtml;
+      }
+
       html += `</div>`;
       wrap.innerHTML = html;
 
-      // marca seleção atual (se houver)
+      // Ativa lógica de abas
+      if(bothTeams){
+        const tabContainer = wrap.querySelector('.lineup-tabs');
+        if(tabContainer){
+          tabContainer.addEventListener('click', e=>{
+            const btn = e.target.closest('.lineup-tab-btn');
+            if(!btn) return;
+            const panelId = btn.dataset.panel;
+            tabContainer.querySelectorAll('.lineup-tab-btn').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            wrap.querySelectorAll('.lineup-panel').forEach(p=>p.classList.remove('active'));
+            const target = document.getElementById(panelId);
+            if(target) target.classList.add('active');
+            // Recalcula altura do collapse ao trocar de aba
+            const collapseElTab = document.getElementById(`collapse-${game.id}`);
+            if(collapseElTab && collapseElTab.classList.contains("open")){
+              requestAnimationFrame(()=>{
+                collapseElTab.style.maxHeight = collapseElTab.scrollHeight + "px";
+              });
+            }
+          });
+        }
+      }
+
+      // Se o card já estiver expandido, recalcula a altura para acomodar o conteúdo carregado
+      const collapseElLineup = document.getElementById(`collapse-${game.id}`);
+      if(collapseElLineup && collapseElLineup.classList.contains("open")){
+        collapseElLineup.style.maxHeight = collapseElLineup.scrollHeight + "px";
+      }
+
+      // A lista de "Reservas" usa <details>/<summary> e muda a altura do
+      // conteúdo ao abrir/fechar. Como o card-pai (.pred-collapse) tem
+      // max-height fixo + overflow:hidden, sem isto a expansão da lista
+      // ficava cortada e parecia não abrir.
+      wrap.querySelectorAll(".bench-list").forEach(details=>{
+        details.addEventListener("toggle", ()=>{
+          const collapseElBench = document.getElementById(`collapse-${game.id}`);
+          if(collapseElBench && collapseElBench.classList.contains("open")){
+            requestAnimationFrame(()=>{
+              collapseElBench.style.maxHeight = collapseElBench.scrollHeight + "px";
+            });
+          }
+        });
+      });
+
+
+      const fullNameEl = document.getElementById(`scorer-fullname-${game.id}`);
       function applySelection(name){
         wrap.querySelectorAll(".player-token, .no-goal-btn").forEach(el=>{
           const isSel = el.dataset.name === name;
@@ -694,7 +2368,7 @@ async function loadAndRenderGames(){
             if(!ballSpan){
               const span = document.createElement("span");
               span.className = "ball-mark";
-              span.textContent = " ⚽";
+              span.innerHTML = ' <img class="ball-icon" src="https://res.cloudinary.com/adidas-app/image/upload/c_limit,h_2532,q_auto:good,w_2532/v1/page-assets/40/hczyjk8eeryat5dh9fhp.png" alt="bola">';
               el.appendChild(span);
             }
           } else if(ballSpan){
@@ -702,39 +2376,237 @@ async function loadAndRenderGames(){
           }
         });
         hidden.value = name;
+
+        // Mostra o nome completo do jogador selecionado
+        if(fullNameEl){
+          if(!name){
+            fullNameEl.innerHTML = !locked
+              ? `<span class="scorer-hint"><span class="hint-arrow">👇</span> Toque no jogador que vai marcar o 1º gol</span>`
+              : "";
+          } else if(name === "ninguém"){
+            fullNameEl.textContent = "Ninguém marca (0x0)";
+          } else {
+            fullNameEl.innerHTML = `<b style="color:#fff;">${name}</b> <span style="color:#fff;">marca o 1º gol</span>`;
+          }
+        }
+
+        // Atualiza o rascunho não salvo do palpite
+        const cur = unsavedPreds[game.id] || { home: effPred?effPred.home:'', away: effPred?effPred.away:'', scorer: '' };
+        cur.scorer = name;
+        unsavedPreds[game.id] = cur;
       }
       if(hidden.value) applySelection(hidden.value);
 
+      if(!locked) updatePitchLock(game);
+
+
       wrap.querySelectorAll(".player-token, .no-goal-btn").forEach(el=>{
-        el.addEventListener("click", ()=> applySelection(el.dataset.name));
+        if(locked){
+          el.style.opacity = "0.45";
+          el.style.cursor = "not-allowed";
+          el.style.pointerEvents = "none";
+        } else {
+          el.addEventListener("click", ()=> applySelection(el.dataset.name));
+        }
       });
+      
+      wrap.querySelectorAll(".pitch .player-token").forEach(async el=>{
+        const name = el.dataset.name;
+        const photo = await getPlayerPhoto(name);
+        const initials = name.split(' ').slice(0,2).map(n=>n[0]).join('').toUpperCase();
+
+        if(photo){
+          el.insertAdjacentHTML('afterbegin',
+            `<div class="player-face-wrap" style="background-image:url('${photo}')"></div>`
+          );
+        }else{
+          el.insertAdjacentHTML('afterbegin',
+            `<div class="player-avatar">${initials}</div>`
+          );
+        }
+        const collapseElPhoto = document.getElementById(`collapse-${game.id}`);
+        if(collapseElPhoto && collapseElPhoto.classList.contains("open")){
+          collapseElPhoto.style.maxHeight = collapseElPhoto.scrollHeight + "px";
+        }
+      });
+
     });
   }
 
-  list.querySelectorAll("button[data-id]").forEach(btn=>{
-    btn.addEventListener("click", async ()=>{
-      const id = btn.dataset.id;
-      const home = document.getElementById(`home-${id}`).value;
-      const away = document.getElementById(`away-${id}`).value;
-      const scorer = document.getElementById(`scorer-${id}`).value.trim();      if(home==="" || away===""){ alert("Preencha o placar!"); return; }
-      const pred = { home: parseInt(home), away: parseInt(away), scorer };
-      await window.storage.set(`pred:${slug(currentUser)}:${id}`, JSON.stringify(pred), true);
-      await window.storage.set(`name:${slug(currentUser)}`, currentUser, true);
-      document.getElementById(`saved-${id}`).textContent = "✅ Salvo!";
-      setTimeout(()=>{ const el=document.getElementById(`saved-${id}`); if(el) el.textContent=""; }, 2000);
-    });
+  // Espaço extra no final da lista para o botão flutuante não cobrir conteúdo
+  const spacer = document.createElement("div");
+  spacer.className = "save-bottom-spacer";
+  list.appendChild(spacer);
+
+  // Botão único para salvar todos os palpites do dia (flutuante, sempre visível)
+  const oldSaveWrap = document.getElementById("saveAllWrap");
+  if(oldSaveWrap) oldSaveWrap.remove();
+  const saveWrap = document.createElement("div");
+  saveWrap.id = "saveAllWrap";
+  saveWrap.className = "save-row-floating";
+  saveWrap.innerHTML = `<div><span class="saved-tag" id="saved-all"></span><button id="saveAllBtn" style="width:auto;min-width:200px;padding:10px 24px;font-size:.9rem;letter-spacing:.04em;border-radius:24px;box-shadow:0 4px 16px rgba(255,204,0,.35);">SALVAR PALPITES</button></div>`;
+  document.body.appendChild(saveWrap);
+
+  document.getElementById("saveAllBtn").addEventListener("click", async ()=>{
+    // Monta a lista de jogos que serao salvos, para revisao.
+    // Considera tanto os jogos visiveis no dia atual quanto rascunhos
+    // de outros dias que ainda nao foram salvos.
+    const toSave = [];
+    const idsSeen = new Set();
+
+    // IDs candidatos: jogos do dia atual + qualquer jogo com rascunho pendente
+    const candidateIds = new Set(gamesToShow.map(g=>g.id));
+    Object.keys(unsavedPreds).forEach(id=>candidateIds.add(id));
+
+    for(const id of candidateIds){
+      const game = GAMES.find(g=>g.id === id);
+      if(!game) continue;
+      if(idsSeen.has(game.id)) continue;
+      idsSeen.add(game.id);
+
+      if(isGameLocked(game)) continue;
+
+      let result = null;
+      try{
+        const r = await window.storage.get(`result:${game.id}`, true);
+        if(r) result = JSON.parse(r.value);
+      }catch(e){}
+      if(result) continue;
+
+      // Se o jogo está visível na tela, usa os valores dos inputs (mais atuais).
+      // Senão, usa o rascunho guardado em unsavedPreds.
+      let home, away, scorer;
+      const homeEl = document.getElementById(`home-${game.id}`);
+      const awayEl = document.getElementById(`away-${game.id}`);
+      if(homeEl && awayEl){
+        home = homeEl.value;
+        away = awayEl.value;
+        const scorerEl = document.getElementById(`scorer-${game.id}`);
+        scorer = scorerEl ? scorerEl.value.trim() : "";
+      } else {
+        const draft = unsavedPreds[game.id];
+        if(!draft) continue;
+        home = draft.home;
+        away = draft.away;
+        scorer = (draft.scorer || "").trim();
+      }
+
+      if(home==="" || away===""){ continue; }
+
+      toSave.push({ game, home: parseInt(home), away: parseInt(away), scorer });
+    }
+
+    if(toSave.length === 0){
+      showToast("Nenhum palpite preenchido para salvar.", "error");
+      return;
+    }
+
+    // Jogos do dia exibido que ficaram sem palpite (em branco)
+    const missing = [];
+    for(const game of gamesToShow){
+      if(isGameLocked(game)) continue;
+
+      let result = null;
+      try{
+        const r = await window.storage.get(`result:${game.id}`, true);
+        if(r) result = JSON.parse(r.value);
+      }catch(e){}
+      if(result) continue;
+
+      const homeEl = document.getElementById(`home-${game.id}`);
+      const awayEl = document.getElementById(`away-${game.id}`);
+      const home = homeEl ? homeEl.value : (unsavedPreds[game.id]?.home ?? "");
+      const away = awayEl ? awayEl.value : (unsavedPreds[game.id]?.away ?? "");
+
+      if(home === "" || away === ""){
+        missing.push(game);
+      }
+    }
+
+    showSaveConfirmModal(toSave, missing);
   });
+
+  function showSaveConfirmModal(toSave, missing = []){
+    const overlay = document.createElement("div");
+    overlay.className = "modal-overlay";
+
+    const itemsHtml = toSave.map(({game, home, away, scorer})=>`
+      <div class="modal-game">
+        <div class="mteams">
+          <span>${flagImg(game.home)}${teamNamePt(game.home)}</span>
+          <span class="mscore">${home} x ${away}</span>
+          <span>${teamNamePt(game.away)}${flagImg(game.away)}</span>
+        </div>
+        <div class="mscorer"><img class="ball-icon" src="https://res.cloudinary.com/adidas-app/image/upload/c_limit,h_2532,q_auto:good,w_2532/v1/page-assets/40/hczyjk8eeryat5dh9fhp.png" alt="bola"> 1\u00ba gol: <b>${(home===0 && away===0) ? "0x0" : (scorer ? scorer : "ningu\u00e9m")}</b></div>
+      </div>
+    `).join("");
+
+    const missingHtml = missing.length > 0 ? `
+      <div class="missing-pred-warning">
+        <div class="mp-title">⚠️ Jogo(s) de hoje sem palpite preenchido:</div>
+        ${missing.map(game=>`
+          <div class="missing-pred-game">
+            <span>${flagImg(game.home)}${teamNamePt(game.home)} <span class="vs">x</span> ${teamNamePt(game.away)}${flagImg(game.away)}</span>
+            <span style="color:var(--muted);">em branco</span>
+          </div>
+        `).join("")}
+      </div>
+    ` : "";
+
+    overlay.innerHTML = `
+      <div class="modal-box">
+        <h3>Confirme seus palpites</h3>
+        <div class="rules" style="margin-top:0;">Revise o placar e quem marca o 1\u00ba gol antes de salvar. Depois de salvo, voc\u00ea ainda pode editar at\u00e9 o jogo come\u00e7ar.</div>
+        ${itemsHtml}
+        ${missingHtml}
+        <div class="modal-actions">
+          <button class="secondary" id="cancelSaveBtn">Voltar e editar</button>
+          <button id="confirmSaveBtn">Confirmar e salvar</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    overlay.querySelector("#cancelSaveBtn").addEventListener("click", ()=>{
+      overlay.remove();
+    });
+    overlay.addEventListener("click", (e)=>{
+      if(e.target === overlay) overlay.remove();
+    });
+
+    overlay.querySelector("#confirmSaveBtn").addEventListener("click", async ()=>{
+      const confirmBtn = overlay.querySelector("#confirmSaveBtn");
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = "Salvando...";
+
+      const savedTag = document.getElementById("saved-all");
+      for(const {game, home, away, scorer} of toSave){
+        const pred = {
+          home, away, scorer,
+          savedAt: new Date().toLocaleString("pt-BR", { day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit", second:"2-digit" })
+        };
+        await window.storage.set(`pred:${slug(currentUser)}:${game.id}`, JSON.stringify(pred), true);
+        delete unsavedPreds[game.id];
+      }
+      await window.storage.set(`name:${slug(currentUser)}`, currentUser, true);
+      invalidateFirebaseCache(); // garante que ranking/perfil reflitam os novos palpites
+
+      overlay.remove();
+      savedTag.textContent = "\u2705 Palpites salvos!";
+      setTimeout(()=>{ savedTag.textContent=""; }, 2500);
+    });
+  }
 }
 
 // ---------- Cálculo de pontos ----------
 function calcPoints(pred, result){
   let total = 0, breakdown = [];
+  const predRes = Math.sign(pred.home - pred.away);
+  const realRes = Math.sign(result.home - result.away);
   if(pred.home === result.home && pred.away === result.away){
     total += PTS_EXACT; breakdown.push(`Placar exato +${PTS_EXACT}`);
-  } else {
-    const predRes = Math.sign(pred.home - pred.away);
-    const realRes = Math.sign(result.home - result.away);
-    if(predRes === realRes){ total += PTS_RESULT; breakdown.push(`Resultado certo +${PTS_RESULT}`); }
+  } else if(predRes === realRes){
+    total += PTS_RESULT; breakdown.push(`Vencedor certo +${PTS_RESULT}`);
   }
   if(result.scorer && result.scorer.trim()!==""){
     if(pred.scorer && pred.scorer.trim().toLowerCase() === result.scorer.trim().toLowerCase()){
@@ -749,64 +2621,390 @@ async function renderRanking(){
   const container = document.getElementById("rankingList");
   container.innerHTML = `<div class="empty">Carregando ranking...</div>`;
 
-  // pega lista de nomes
-  let names = [];
-  try{
-    const r = await window.storage.list("name:", true);
-    if(r && r.keys){
-      for(const k of r.keys){
-        const v = await window.storage.get(k, true);
-        if(v) names.push(v.value);
-      }
+  const snap = await getFirebaseSnap();
+
+  if(!snap.exists()){
+    container.innerHTML = `<div class="empty">Ninguém fez palpites ainda 🙃</div>`;
+    return;
+  }
+
+  const db = snap.val();
+  const names = [];
+
+  Object.keys(db).forEach(key=>{
+    if(key.startsWith("name:")){
+      names.push(db[key]);
     }
-  }catch(e){}
+  });
 
   if(names.length===0){
     container.innerHTML = `<div class="empty">Ninguém fez palpites ainda 🙃</div>`;
     return;
   }
 
-  // pega resultados
   const results = {};
-  for(const game of GAMES){
-    try{
-      const r = await window.storage.get(`result:${game.id}`, true);
-      if(r) results[game.id] = JSON.parse(r.value);
-    }catch(e){}
-  }
 
-  const scores = [];
-  for(const name of names){
-    let total = 0;
-    for(const game of GAMES){
-      if(!results[game.id]) continue;
+  Object.keys(db).forEach(key=>{
+    if(key.startsWith("result:")){
+      const gameId = key.replace("result:","");
       try{
-        const r = await window.storage.get(`pred:${slug(name)}:${game.id}`, true);
-        if(r){
-          const pred = JSON.parse(r.value);
-          total += calcPoints(pred, results[game.id]).total;
-        }
+        results[gameId] = JSON.parse(db[key]);
       }catch(e){}
     }
-    scores.push({ name, total });
+  });
+
+  const scores = [];
+
+  for(const name of names){
+    let total = 0;
+    const gameDetails = [];
+
+    for(const game of GAMES){
+      if(!results[game.id]) continue;
+
+      const predKey = `pred:${slug(name)}:${game.id}`;
+      let pts = null;
+      let pred = null;
+
+      if(db[predKey]){
+        try{
+          pred = JSON.parse(db[predKey]);
+          const calc = calcPoints(pred, results[game.id]);
+          pts = calc.total;
+          total += pts;
+        }catch(e){}
+      }
+
+      gameDetails.push({ game, result: results[game.id], pred, pts });
+    }
+
+    // Bonus points (manual admin)
+    let bonus = 0;
+    const bonusKey = `bonus:${slug(name)}`;
+    if(db[bonusKey]){
+      try{
+        const bonusList = JSON.parse(db[bonusKey]);
+        bonus = bonusList.reduce((s,b)=>s+b.pts, 0);
+        total += bonus;
+      }catch(e){}
+    }
+
+    scores.push({ name, total, bonus, gameDetails });
   }
 
   scores.sort((a,b)=> b.total - a.total);
 
-  container.innerHTML = "";
+  container.innerHTML = `
+    <div class="ranking-header">
+      <span class="rh-pos">#</span>
+      <span class="rh-name">Nome</span>
+      <span class="rh-pts">Pontos</span>
+    </div>
+  `;
+
   scores.forEach((s,i)=>{
-    const row = document.createElement("div");
-    row.className = "ranking-row";
-    row.innerHTML = `
-      <div class="pos">${i+1}º</div>
-      <div class="rname">${s.name}</div>
-      <div class="pts">${s.total} pts</div>
+    const wrap = document.createElement("div");
+
+    // Build game rows HTML
+    let gamesHtml = "";
+    for(const { game, result, pred, pts } of s.gameDetails){
+      const realScore = `${result.home} x ${result.away}`;
+      let predScore = "—";
+      let ptsClass = "pts-none";
+      let ptsLabel = "Sem palpite";
+
+      let predScorePlain = "—";
+      const realWinner = result.home > result.away ? "home" : (result.away > result.home ? "away" : "draw");
+      if(pred !== null){
+        predScorePlain = `${pred.home} x ${pred.away}`;
+        const predWinner = pred.home > pred.away ? "home" : (pred.away > pred.home ? "away" : "draw");
+        const exactMatch = predScorePlain === realScore;
+        const homeGold = !exactMatch && predWinner === "home" && realWinner === "home";
+        const awayGold = !exactMatch && predWinner === "away" && realWinner === "away";
+        const homeNum = homeGold ? `<span style="color:var(--gold);">${pred.home}</span>` : pred.home;
+        const awayNum = awayGold ? `<span style="color:var(--gold);">${pred.away}</span>` : pred.away;
+        predScore = `${homeNum} x ${awayNum}`;
+        if(pts === 0){ ptsClass = "pts-zero"; ptsLabel = "0 pts"; }
+        else if(pts >= PTS_EXACT || pts === PTS_SCORER){ ptsClass = "pts-exact"; ptsLabel = `+${pts} pts`; }
+        else { ptsClass = "pts-result"; ptsLabel = `+${pts} pt`; }
+      }
+
+      const scorerMatches = pred?.scorer && result?.scorer && pred.scorer.trim().toLowerCase() === result.scorer.trim().toLowerCase();
+      const scorerColor = pred?.scorer ? (scorerMatches ? '#7be38a' : '#ff8080') : 'inherit';
+
+      gamesHtml += `
+  <div class="pred-game-row" style="animation-delay:${gamesHtml.split('pred-game-row').length * 0.04}s;">
+
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;width:100%;gap:8px;">
+      <div class="pred-game-teams">
+        ${flagImg(game.home)}${teamNamePt(game.home)}
+        <span style="color:#555">vs</span>
+        ${flagImg(game.away)}${teamNamePt(game.away)}
+      </div>
+      <div class="pred-game-pts ${ptsClass}">
+        ${ptsLabel}
+      </div>
+    </div>
+
+    <div class="pred-game-info" style="font-size:.85rem;${pred!==null && predScorePlain===realScore ? 'color:#7be38a;' : (pred!==null ? 'color:#ff8080;' : '')}">
+      <span style="color:var(--text);">Palpite:</span> <b style="font-size:1.05rem;">${predScore}</b>
+      ${pred?.scorer ? ` <img class="ball-icon" style="width:1.2em;height:1.2em;" src="https://res.cloudinary.com/adidas-app/image/upload/c_limit,h_2532,q_auto:good,w_2532/v1/page-assets/40/hczyjk8eeryat5dh9fhp.png" alt="bola"> <span style="color:${scorerColor};">${pred.scorer}</span>` : ""}
+    </div>
+
+    <div class="pred-game-info" style="font-size:.85rem;color:var(--text);font-weight:700;">
+      Real: <b style="font-size:1.05rem;">${realScore}</b>
+      ${result?.scorer ? ` <img class="ball-icon" style="width:1.2em;height:1.2em;" src="https://res.cloudinary.com/adidas-app/image/upload/c_limit,h_2532,q_auto:good,w_2532/v1/page-assets/40/hczyjk8eeryat5dh9fhp.png" alt="bola"> ${result.scorer}` : ""}
+    </div>
+
+  </div>
+`;
+    }
+
+    if(s.bonus !== 0){
+      gamesHtml += `<div class="pred-game-row" style="flex-direction:row;align-items:center;padding:4px 0;"><div class="pred-game-teams" style="color:var(--muted);font-size:.7rem;flex:1;">Pontuação manual</div><div class="pred-game-pts pts-result" style="font-size:.75rem;">${s.bonus > 0 ? '+' : ''}${s.bonus} pts</div></div>`;
+    }
+
+    if(!gamesHtml) gamesHtml = `<div style="color:var(--muted);font-size:.8rem;padding:6px 0;">Nenhum jogo encerrado ainda.</div>`;
+
+    const podiumClass = i===0 ? " podium-1" : i===1 ? " podium-2" : i===2 ? " podium-3" : "";
+
+    wrap.innerHTML = `
+      <div class="ranking-row${podiumClass}">
+        <div class="pos">${i+1}º</div>
+        <div class="rname">${s.name}</div>
+        <div class="pts">${s.total}</div>
+      </div>
+      <div class="ranking-details">${gamesHtml}</div>
     `;
-    container.appendChild(row);
+
+    const row = wrap.querySelector(".ranking-row");
+    const details = wrap.querySelector(".ranking-details");
+    row.addEventListener("click", ()=>{
+      details.classList.toggle("open");
+    });
+
+    container.appendChild(wrap);
   });
 }
 
+// ---------- Meu Desempenho ----------
+async function renderDesempenho(){
+  const container = document.getElementById("desempenhoContent");
+  container.innerHTML = `<div class="empty">Carregando seu desempenho...</div>`;
+
+  const snap = await getFirebaseSnap();
+
+  if(!snap.exists()){
+    container.innerHTML = `<div class="empty">Ainda não há dados suficientes 🙃</div>`;
+    return;
+  }
+
+  const db = snap.val();
+  const mySlug = slug(currentUser);
+
+  // Resultados lançados
+  const results = {};
+  Object.keys(db).forEach(key=>{
+    if(key.startsWith("result:")){
+      const gameId = key.replace("result:","");
+      try{ results[gameId] = JSON.parse(db[key]); }catch(e){}
+    }
+  });
+
+  // ---------- Estatísticas do usuário ----------
+  let total = 0;
+  let gamesWithResult = 0;
+  let gamesWithPred = 0;
+  let exactCount = 0;
+  let winnerCorrectCount = 0; // inclui placar exato (acertou o vencedor/empate)
+  let scorerEligible = 0; // jogos com gol e com palpite de artilheiro
+  let scorerCorrect = 0;
+  const gameDetails = [];
+
+  for(const game of GAMES){
+    const result = results[game.id];
+    if(!result) continue;
+    gamesWithResult++;
+
+    const predKey = `pred:${mySlug}:${game.id}`;
+    let pred = null;
+    let pts = null;
+
+    if(db[predKey]){
+      try{ pred = JSON.parse(db[predKey]); }catch(e){ pred = null; }
+    }
+
+    if(pred){
+      gamesWithPred++;
+
+      const calc = calcPoints(pred, result);
+      pts = calc.total;
+      total += pts;
+
+      if(pred.home === result.home && pred.away === result.away){
+        exactCount++;
+        winnerCorrectCount++;
+      } else {
+        const predRes = Math.sign(pred.home - pred.away);
+        const realRes = Math.sign(result.home - result.away);
+        if(predRes === realRes) winnerCorrectCount++;
+      }
+
+      if(result.scorer && result.scorer.trim() !== ""){
+        scorerEligible++;
+        if(pred.scorer && pred.scorer.trim().toLowerCase() === result.scorer.trim().toLowerCase()){
+          scorerCorrect++;
+        }
+      }
+    }
+
+    gameDetails.push({ game, result, pred, pts });
+  }
+
+  // Bonus
+  let bonus = 0;
+  const bonusKey = `bonus:${mySlug}`;
+  if(db[bonusKey]){
+    try{
+      const bonusList = JSON.parse(db[bonusKey]);
+      bonus = bonusList.reduce((s,b)=>s+b.pts, 0);
+      total += bonus;
+    }catch(e){}
+  }
+
+  // ---------- HTML dos palpites já feitos vs placar real ----------
+  let myGamesHtml = "";
+  for(const { game, result, pred, pts } of gameDetails){
+    const realScore = `${result.home} x ${result.away}`;
+    let predScore = "—";
+    let ptsClass = "pts-none";
+    let ptsLabel = "Sem palpite";
+
+    let predScorePlain = "—";
+    const realWinner = result.home > result.away ? "home" : (result.away > result.home ? "away" : "draw");
+    if(pred !== null){
+      predScorePlain = `${pred.home} x ${pred.away}`;
+      const predWinner = pred.home > pred.away ? "home" : (pred.away > pred.home ? "away" : "draw");
+      const exactMatch = predScorePlain === realScore;
+      const homeGold = !exactMatch && predWinner === "home" && realWinner === "home";
+      const awayGold = !exactMatch && predWinner === "away" && realWinner === "away";
+      const homeNum = homeGold ? `<span style="color:var(--gold);">${pred.home}</span>` : pred.home;
+      const awayNum = awayGold ? `<span style="color:var(--gold);">${pred.away}</span>` : pred.away;
+      predScore = `${homeNum} x ${awayNum}`;
+      if(pts === 0){ ptsClass = "pts-zero"; ptsLabel = "0 pts"; }
+      else if(pts >= PTS_EXACT || pts === PTS_SCORER){ ptsClass = "pts-exact"; ptsLabel = `+${pts} pts`; }
+      else { ptsClass = "pts-result"; ptsLabel = `+${pts} pt`; }
+    }
+
+    const scorerMatches = pred?.scorer && result?.scorer && pred.scorer.trim().toLowerCase() === result.scorer.trim().toLowerCase();
+    const scorerColor = pred?.scorer ? (scorerMatches ? '#7be38a' : '#ff8080') : 'inherit';
+
+    myGamesHtml += `
+  <div class="pred-game-row">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;width:100%;gap:8px;">
+      <div class="pred-game-teams">
+        ${flagImg(game.home)}${teamNamePt(game.home)}
+        <span style="color:#555">vs</span>
+        ${flagImg(game.away)}${teamNamePt(game.away)}
+      </div>
+      <div class="pred-game-pts ${ptsClass}">
+        ${ptsLabel}
+      </div>
+    </div>
+
+    <div class="pred-game-info" style="font-size:.85rem;${pred!==null && predScorePlain===realScore ? 'color:#7be38a;' : (pred!==null ? 'color:#ff8080;' : '')}">
+      <span style="color:var(--text);">Palpite:</span> <b style="font-size:1.05rem;">${predScore}</b>
+      ${pred?.scorer ? ` <img class="ball-icon" style="width:1.2em;height:1.2em;" src="https://res.cloudinary.com/adidas-app/image/upload/c_limit,h_2532,q_auto:good,w_2532/v1/page-assets/40/hczyjk8eeryat5dh9fhp.png" alt="bola"> <span style="color:${scorerColor};">${pred.scorer}</span>` : ""}
+    </div>
+
+    <div class="pred-game-info" style="font-size:.85rem;color:var(--text);font-weight:700;">
+      Real: <b style="font-size:1.05rem;">${realScore}</b>
+      ${result?.scorer ? ` <img class="ball-icon" style="width:1.2em;height:1.2em;" src="https://res.cloudinary.com/adidas-app/image/upload/c_limit,h_2532,q_auto:good,w_2532/v1/page-assets/40/hczyjk8eeryat5dh9fhp.png" alt="bola"> ${result.scorer}` : ""}
+    </div>
+  </div>
+`;
+  }
+  if(!myGamesHtml) myGamesHtml = `<div style="color:var(--muted);font-size:.8rem;padding:6px 0;">Nenhum jogo encerrado ainda.</div>`;
+
+
+  const names = [];
+  Object.keys(db).forEach(key=>{ if(key.startsWith("name:")) names.push(db[key]); });
+
+  const allTotals = [];
+  for(const name of names){
+    let t = 0;
+    for(const game of GAMES){
+      const result = results[game.id];
+      if(!result) continue;
+      const predKey = `pred:${slug(name)}:${game.id}`;
+      if(db[predKey]){
+        try{
+          const pred = JSON.parse(db[predKey]);
+          t += calcPoints(pred, result).total;
+        }catch(e){}
+      }
+    }
+    const bk = `bonus:${slug(name)}`;
+    if(db[bk]){
+      try{ t += JSON.parse(db[bk]).reduce((s,b)=>s+b.pts,0); }catch(e){}
+    }
+    allTotals.push({ name, total: t });
+  }
+  allTotals.sort((a,b)=>b.total-a.total);
+  const myPosition = allTotals.findIndex(x => slug(x.name) === mySlug) + 1;
+  const totalParticipants = allTotals.length;
+
+  // ---------- Percentuais ----------
+  const winnerPct = gamesWithPred > 0 ? Math.round((winnerCorrectCount / gamesWithPred) * 100) : 0;
+  const exactPct = gamesWithPred > 0 ? Math.round((exactCount / gamesWithPred) * 100) : 0;
+  const scorerPct = scorerEligible > 0 ? Math.round((scorerCorrect / scorerEligible) * 100) : 0;
+
+  container.innerHTML = `
+    <div class="card" style="text-align:center;">
+      <div style="font-size:.8rem;color:var(--muted);">Pontuação total</div>
+      <div style="font-size:2.2rem;font-weight:800;color:var(--gold);">${total} pts</div>
+      ${myPosition > 0 ? `<div style="font-size:.85rem;color:var(--muted);margin-top:4px;">Posição no ranking: <b style="color:var(--text);">${myPosition}º de ${totalParticipants}</b></div>` : ''}
+    </div>
+
+    <div class="card">
+      <div style="font-weight:800;color:var(--gold);margin-bottom:10px;">📊 Estatísticas de palpites</div>
+
+      <div class="desempenho-stat-row">
+        <div class="desempenho-stat-label">🎯 Placares exatos</div>
+        <div class="desempenho-stat-value">${exactCount} <span class="desempenho-stat-sub">de ${gamesWithPred}</span></div>
+      </div>
+      <div class="desempenho-bar"><div class="desempenho-bar-fill" style="width:${exactPct}%;background:#7be38a;"></div></div>
+      <div class="desempenho-stat-pct">${exactPct}% de acerto exato</div>
+
+      <div class="desempenho-stat-row" style="margin-top:14px;">
+        <div class="desempenho-stat-label">🥇 Vencedor correto</div>
+        <div class="desempenho-stat-value">${winnerCorrectCount} <span class="desempenho-stat-sub">de ${gamesWithPred}</span></div>
+      </div>
+      <div class="desempenho-bar"><div class="desempenho-bar-fill" style="width:${winnerPct}%;background:var(--gold);"></div></div>
+      <div class="desempenho-stat-pct">${winnerPct}% de acerto de vencedor</div>
+
+      <div class="desempenho-stat-row" style="margin-top:14px;">
+        <div class="desempenho-stat-label"><img class="ball-icon" src="https://res.cloudinary.com/adidas-app/image/upload/c_limit,h_2532,q_auto:good,w_2532/v1/page-assets/40/hczyjk8eeryat5dh9fhp.png" alt="bola"> 1º gol</div>
+        <div class="desempenho-stat-value">${scorerCorrect} <span class="desempenho-stat-sub">de ${scorerEligible}</span></div>
+      </div>
+      <div class="desempenho-bar"><div class="desempenho-bar-fill" style="width:${scorerPct}%;background:#7be38a;"></div></div>
+      <div class="desempenho-stat-pct">${scorerPct}% de acerto do 1º gol</div>
+    </div>
+
+    <div class="card">
+      <div style="font-weight:800;color:var(--gold);margin-bottom:6px;">📈 Resumo</div>
+      <div style="font-size:.85rem;color:var(--text);line-height:1.8;">
+        Jogos finalizados: <b>${gamesWithResult}</b><br>
+        Palpites enviados: <b>${gamesWithPred}</b><br>
+      </div>
+      <div style="font-weight:800;color:var(--gold);margin:14px 0 4px;">📋 Seus palpites x Placar real</div>
+      ${myGamesHtml}
+    </div>
+  `;
+}
+
 // ---------- Todos os palpites (somente admin) ----------
+// Correção aplicada: Função refeita inteiramente para consultar o Firebase usando o slug correto de cada usuário
 async function renderAllPredictions(){
   const container = document.getElementById("allPredsList");
 
@@ -817,51 +3015,62 @@ async function renderAllPredictions(){
 
   container.innerHTML = `<div class="empty">Carregando palpites de todos...</div>`;
 
-  // pega lista de nomes cadastrados
-  let names = [];
-  try{
-    const r = await window.storage.list("name:", true);
-    if(r && r.keys){
-      for(const k of r.keys){
-        const v = await window.storage.get(k, true);
-        if(v) names.push(v.value);
-      }
-    }
-  }catch(e){}
+  const snap = await firebase.database().ref(FB_ROOT).get();
 
-  if(names.length===0){
+  if(!snap.exists()){
+    container.innerHTML = `<div class="empty">Nenhum dado encontrado.</div>`;
+    return;
+  }
+
+  const db = snap.val();
+  const names = [];
+
+  Object.keys(db).forEach(key=>{
+    if(key.startsWith("name:")){
+      names.push(db[key]);
+    }
+  });
+
+  if(names.length === 0){
     container.innerHTML = `<div class="empty">Ninguém fez palpites ainda 🙃</div>`;
     return;
   }
 
-  names.sort((a,b)=> a.localeCompare(b, "pt-BR"));
+  names.sort((a,b)=>a.localeCompare(b,"pt-BR"));
 
   container.innerHTML = "";
+
   for(const name of names){
     const card = document.createElement("div");
     card.className = "card";
 
     let rowsHtml = "";
-    for(const game of GAMES){
-      let pred = null;
-      try{
-        const r = await window.storage.get(`pred:${slug(name)}:${game.id}`, true);
-        if(r) pred = JSON.parse(r.value);
-      }catch(e){}
-      if(!pred) continue;
 
-      rowsHtml += `
-        <div class="game-header" style="margin-top:8px;">
-          <span>${flagImg(game.home)}${game.home} <b>${pred.home} x ${pred.away}</b> ${game.away}${flagImg(game.away)}</span>
-        </div>
-        ${pred.scorer ? `<div style="font-size:.75rem;color:var(--muted);">⚽ 1º gol: ${pred.scorer}</div>` : ""}
-      `;
+    for(const game of GAMES){
+      const predKey = `pred:${slug(name)}:${game.id}`;
+
+      if(!db[predKey]) continue;
+
+      try{
+        const pred = JSON.parse(db[predKey]);
+
+        rowsHtml += `
+          <div class="game-header" style="margin-top:8px;">
+            <span>${flagImg(game.home)}${teamNamePt(game.home)}
+            <b>${pred.home} x ${pred.away}</b>
+            ${teamNamePt(game.away)}${flagImg(game.away)}</span>
+          </div>
+          ${pred.scorer ? `<div style="font-size:.75rem;color:var(--muted);"><img class="ball-icon" src="https://res.cloudinary.com/adidas-app/image/upload/c_limit,h_2532,q_auto:good,w_2532/v1/page-assets/40/hczyjk8eeryat5dh9fhp.png" alt="bola"> 1º gol: ${pred.scorer}</div>` : ""}
+          ${pred.savedAt ? `<div style="font-size:.7rem;color:#7be38a;margin-top:2px;">🕐 Enviado em: ${pred.savedAt}</div>` : ""}
+        `;
+      }catch(e){}
     }
 
     card.innerHTML = `
       <div style="font-weight:800;color:var(--gold);margin-bottom:4px;">${name}</div>
       ${rowsHtml || '<div class="empty" style="padding:6px;">Ainda não fez nenhum palpite</div>'}
     `;
+
     container.appendChild(card);
   }
 }
@@ -888,11 +3097,11 @@ document.getElementById("adminToggle").addEventListener("click", async ()=>{
     card.innerHTML = `
       <div class="game-header"><span>${game.group} • ${game.date}</span></div>
       <div class="teams">
-        <div class="team">${game.home}</div>
+        <div class="team">${teamNamePt(game.home)}</div>
         <input type="number" min="0" class="score-input" id="adm-home-${game.id}" value="${result?result.home:''}">
         <div class="vs">x</div>
         <input type="number" min="0" class="score-input" id="adm-away-${game.id}" value="${result?result.away:''}">
-        <div class="team">${game.away}</div>
+        <div class="team">${teamNamePt(game.away)}</div>
       </div>
       <label class="small">Quem fez o 1º gol da partida (deixe vazio se 0x0)</label>
       <input type="text" id="adm-scorer-${game.id}" value="${result?(result.scorer||''):''}">
@@ -907,14 +3116,209 @@ document.getElementById("adminToggle").addEventListener("click", async ()=>{
       const home = document.getElementById(`adm-home-${id}`).value;
       const away = document.getElementById(`adm-away-${id}`).value;
       const scorer = document.getElementById(`adm-scorer-${id}`).value.trim();
-      if(home==="" || away===""){ alert("Preencha o placar!"); return; }
+      if(home==="" || away===""){ showToast("Preencha o placar!", "error"); return; }
       const result = { home: parseInt(home), away: parseInt(away), scorer };
       await window.storage.set(`result:${id}`, JSON.stringify(result), true);
-      alert("Resultado salvo! O ranking será atualizado.");
+      invalidateFirebaseCache(); // ranking precisa refletir o novo resultado
+      showToast("Resultado salvo! O ranking será atualizado.", "success");
       loadAndRenderGames();
     });
   });
 });
+
+// ---------- Painel de pontuação manual (bônus) ----------
+document.getElementById("bonusToggle").addEventListener("click", async ()=>{
+  const panel = document.getElementById("bonusPanel");
+  if(panel.style.display === "block"){
+    panel.style.display = "none";
+    return;
+  }
+  panel.style.display = "block";
+  await renderBonusPanel();
+});
+
+async function renderBonusPanel(){
+  const panel = document.getElementById("bonusPanel");
+  panel.innerHTML = `<div class="rules">Adicione pontos.</div><div class="empty">Carregando participantes...</div>`;
+
+  const snap = await firebase.database().ref(FB_ROOT).get();
+  if(!snap.exists()){ panel.innerHTML += `<div class="empty">Nenhum participante encontrado.</div>`; return; }
+
+  const db = snap.val();
+  const names = [];
+  Object.keys(db).forEach(key=>{ if(key.startsWith("name:")) names.push(db[key]); });
+  names.sort((a,b)=>a.localeCompare(b,"pt-BR"));
+
+  if(names.length === 0){ panel.innerHTML = `<div class="rules">Aqui você pode adicionar pontos a participantes que já faziam parte do bolão antes de entrar no site.</div><div class="empty">Nenhum participante cadastrado ainda.</div>`; return; }
+
+  // Load existing bonuses
+  const bonuses = {};
+  Object.keys(db).forEach(key=>{
+    if(key.startsWith("bonus:")){
+      const uslug = key.replace("bonus:","");
+      try{ bonuses[uslug] = JSON.parse(db[key]); }catch(e){ bonuses[uslug] = []; }
+    }
+  });
+
+  panel.innerHTML = `<div class="rules">Aqui você pode adicionar pontos a participantes que já faziam parte do bolão antes de entrar no site..</div>`;
+
+  for(const name of names){
+    const uslug = slug(name);
+    const userBonuses = bonuses[uslug] || [];
+    const totalBonus = userBonuses.reduce((s,b)=>s+b.pts,0);
+
+    const historyHtml = userBonuses.length > 0
+      ? userBonuses.map(b=>`<div class="bonus-history">+<span>${b.pts} pts</span>${b.reason ? ` — ${b.reason}` : ""} <span style="color:var(--muted);font-weight:400;">(${b.date})</span></div>`).join("")
+      : `<div class="bonus-history" style="color:var(--muted);">Nenhum bônus registrado</div>`;
+
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <div style="font-weight:800;color:var(--gold);margin-bottom:8px;">${name} <span style="font-size:.75rem;color:#7be38a;font-weight:600;">${totalBonus > 0 ? `(+${totalBonus} pts bônus)` : ""}</span></div>
+      <div class="bonus-row">
+        <input type="number" min="-99" max="999" class="bonus-pts-input" id="bonus-pts-${uslug}" placeholder="Pts" title="Pontos a adicionar (pode ser negativo para corrigir)">
+        <input type="text" class="bonus-reason" id="bonus-reason-${uslug}" placeholder="Motivo (ex: participou desde a rodada 1)">
+        <button class="secondary" data-slug="${uslug}" data-name="${name}">Adicionar</button>
+      </div>
+      <div id="bonus-history-${uslug}">${historyHtml}</div>
+    `;
+    panel.appendChild(card);
+  }
+
+  panel.querySelectorAll("button[data-slug]").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      const uslug = btn.dataset.slug;
+      const name = btn.dataset.name;
+      const ptsInput = document.getElementById(`bonus-pts-${uslug}`);
+      const reasonInput = document.getElementById(`bonus-reason-${uslug}`);
+      const pts = parseInt(ptsInput.value);
+      if(isNaN(pts) || pts === 0){ showToast("Digite uma quantidade de pontos válida (diferente de zero).", "error"); return; }
+      const reason = reasonInput.value.trim();
+      const now = new Date().toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+
+      // Load current bonuses for this user
+      let current = [];
+      try{
+        const r = await window.storage.get(`bonus:${uslug}`, true);
+        if(r) current = JSON.parse(r.value);
+      }catch(e){}
+
+      current.push({ pts, reason, date: now });
+      await window.storage.set(`bonus:${uslug}`, JSON.stringify(current), true);
+      invalidateFirebaseCache(); // ranking precisa refletir o novo bônus
+
+      ptsInput.value = "";
+      reasonInput.value = "";
+
+      const totalBonus = current.reduce((s,b)=>s+b.pts,0);
+      const historyEl = document.getElementById(`bonus-history-${uslug}`);
+      historyEl.innerHTML = current.map(b=>`<div class="bonus-history">+<span>${b.pts} pts</span>${b.reason ? ` — ${b.reason}` : ""} <span style="color:var(--muted);font-weight:400;">(${b.date})</span></div>`).join("");
+
+      const titleEl = btn.closest(".card").querySelector("div:first-child span");
+      if(titleEl) titleEl.textContent = totalBonus > 0 ? `(+${totalBonus} pts bônus)` : "";
+
+      showToast(`✅ ${pts > 0 ? "+" : ""}${pts} pontos adicionados para ${name}!`, "success");
+    });
+  });
+}
+
+// ===== Mini Player Cazé TV =====
+// ID do canal oficial da Cazé TV no YouTube (live stream permanente)
+const CAZE_CHANNEL_ID = "UCnSoLWcpMYdVFDEAlqGn4PA"; // Cazé TV
+
+function openCazePlayer(){
+  const player = document.getElementById("cazeMiniplayer");
+  const wrap = document.getElementById("cazeIframeWrap");
+
+  // Se já estiver visível, só garante que aparece
+  if(player.classList.contains("visible")){
+    player.style.display = "block";
+    return;
+  }
+
+  // Injeta o iframe na primeira vez (evita carregar o vídeo antes de clicar)
+  if(!wrap.querySelector("iframe")){
+    const src = `https://www.youtube.com/embed/live_stream?channel=${CAZE_CHANNEL_ID}&autoplay=1&rel=0&modestbranding=1`;
+    wrap.innerHTML = `<iframe src="${src}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe>`;
+  }
+
+  player.classList.add("visible");
+}
+
+function closeCazePlayer(){
+  const player = document.getElementById("cazeMiniplayer");
+  player.classList.remove("visible");
+  // Remove o iframe para parar o stream e economizar dados
+  const wrap = document.getElementById("cazeIframeWrap");
+  wrap.innerHTML = "";
+}
+
+document.getElementById("cazeCloseBtn").addEventListener("click", closeCazePlayer);
+
+// Botão Picture-in-Picture (tenta colocar o vídeo em PiP nativo do browser)
+document.getElementById("cazePipBtn").addEventListener("click", async ()=>{
+  const iframe = document.querySelector("#cazeIframeWrap iframe");
+  if(!iframe){ openCazePlayer(); return; }
+  try{
+    // PiP em iframes só funciona em alguns browsers via contentWindow
+    const video = iframe.contentDocument?.querySelector("video")
+                  || iframe.contentWindow?.document?.querySelector("video");
+    if(video && document.pictureInPictureEnabled){
+      await video.requestPictureInPicture();
+    } else {
+      // Fallback: abre a Cazé TV em nova aba
+      window.open(`https://www.youtube.com/@CazeTV/live`, "_blank");
+    }
+  }catch(e){
+    window.open(`https://www.youtube.com/@CazeTV/live`, "_blank");
+  }
+});
+
+// Drag para mover o mini player (desktop)
+(function(){
+  const el = document.getElementById("cazeMiniplayer");
+  const handle = document.getElementById("cazeHeader");
+  if(!el || !handle) return;
+
+  let isDragging = false, ox = 0, oy = 0;
+
+  handle.addEventListener("mousedown", (e)=>{
+    isDragging = true;
+    ox = e.clientX - el.getBoundingClientRect().left;
+    oy = e.clientY - el.getBoundingClientRect().top;
+    e.preventDefault();
+  });
+
+  document.addEventListener("mousemove", (e)=>{
+    if(!isDragging) return;
+    const x = e.clientX - ox;
+    const y = e.clientY - oy;
+    el.style.left = Math.max(0, Math.min(window.innerWidth - el.offsetWidth, x)) + "px";
+    el.style.top  = Math.max(0, Math.min(window.innerHeight - el.offsetHeight, y)) + "px";
+    el.style.right = "auto"; el.style.bottom = "auto";
+  });
+
+  document.addEventListener("mouseup", ()=>{ isDragging = false; });
+
+  // Touch drag (mobile)
+  handle.addEventListener("touchstart", (e)=>{
+    if(e.touches.length !== 1) return;
+    isDragging = true;
+    ox = e.touches[0].clientX - el.getBoundingClientRect().left;
+    oy = e.touches[0].clientY - el.getBoundingClientRect().top;
+  }, {passive:true});
+
+  document.addEventListener("touchmove", (e)=>{
+    if(!isDragging || e.touches.length !== 1) return;
+    const x = e.touches[0].clientX - ox;
+    const y = e.touches[0].clientY - oy;
+    el.style.left = Math.max(0, Math.min(window.innerWidth - el.offsetWidth, x)) + "px";
+    el.style.top  = Math.max(0, Math.min(window.innerHeight - el.offsetHeight, y)) + "px";
+    el.style.right = "auto"; el.style.bottom = "auto";
+  }, {passive:true});
+
+  document.addEventListener("touchend", ()=>{ isDragging = false; });
+})();
 
 // ---------- Inicialização ----------
 async function init(){
@@ -924,10 +3328,10 @@ async function init(){
 
   document.getElementById("gamesList").innerHTML = `<div class="empty">Carregando jogos da Copa...</div>`;
   try{
-    const { games, results } = await fetchEspnSchedule();
+    const { games, results, live } = await fetchEspnSchedule();
     GAMES = games;
+    LIVE = live;
 
-    // salva automaticamente os resultados que já saíram
     if(fbReady){
       for(const id of Object.keys(results)){
         await window.storage.set(`result:${id}`, JSON.stringify(results[id]), true);
@@ -937,6 +3341,12 @@ async function init(){
     console.error("Erro ao buscar jogos da ESPN:", e);
     document.getElementById("gamesList").innerHTML =
       `<div class="empty">⚠️ Não foi possível carregar os jogos da Copa agora. Tente recarregar a página.</div>`;
+  }
+
+  // Pré-carrega o snapshot do Firebase em background para que
+  // ranking e perfil abram instantaneamente quando o usuário clicar.
+  if(fbReady){
+    getFirebaseSnap().catch(()=>{});
   }
 
   const autoLogado = await tentarLoginAutomatico();
