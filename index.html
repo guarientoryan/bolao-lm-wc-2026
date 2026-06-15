@@ -923,12 +923,12 @@
             <div>
               <div style="font-weight:800;font-size:.95rem;color:#fff;">Cazé TV</div>
               <div style="font-size:.75rem;color:#ff9999;margin-top:2px;display:flex;align-items:center;gap:5px;">
-                <span style="width:6px;height:6px;border-radius:50%;background:#ff3b3b;flex-shrink:0;box-shadow:0 0 5px rgba(255,59,59,.8);animation:live-pulse 1.4s ease-in-out infinite;display:inline-block;"></span>
+                <span class="live-dot" style="width:6px;height:6px;border-radius:50%;background:#ff3b3b;flex-shrink:0;box-shadow:0 0 5px rgba(255,59,59,.8);animation:live-pulse 1.4s ease-in-out infinite;display:inline-block;"></span>
                 Transmissão ao vivo da Copa
               </div>
             </div>
           </div>
-          <div style="background:rgba(255,59,59,0.18);border:1px solid rgba(255,80,80,0.40);border-radius:var(--radius-sm);padding:8px 14px;font-size:.82rem;font-weight:800;color:#ff9999;white-space:nowrap;">
+          <div style="background:rgba(255,59,59,0.18);border:1px solid rgba(255,80,80,0.40);border-radius:var(--radius-sm);padding:8px 14px;font-size:.82rem;font-weight:800;color:#ff9999;white-space:nowrap;display:flex;align-items:center;gap:5px;">
             ▶ Assistir
           </div>
         </div>
@@ -3225,53 +3225,39 @@ async function renderBonusPanel(){
 // ===== Mini Player Cazé TV =====
 // ID do canal oficial da Cazé TV no YouTube (live stream permanente)
 const CAZE_CHANNEL_ID = "UCnSoLWcpMYdVFDEAlqGn4PA"; // Cazé TV
+const YOUTUBE_API_KEY = "AIzaSyCe0wwjod5bg8sIIRsxW5ShFFDnsCGHjQc";
 
-async function fetchCazeLiveVideoId(){
-  // Busca a página do canal da Cazé TV e extrai o videoId da live atual
-  // via noembed (proxy que não tem restrição de CORS)
-  try {
-    const res = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/@CazeTV/live`);
+async function getCazeLiveVideoId(){
+  try{
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CAZE_CHANNEL_ID}&eventType=live&type=video&maxResults=1&key=${YOUTUBE_API_KEY}`;
+    const res = await fetch(url);
     const data = await res.json();
-    // noembed retorna thumbnail_url com o videoId: https://i.ytimg.com/vi/VIDEO_ID/hqdefault.jpg
-    const match = data.thumbnail_url && data.thumbnail_url.match(/\/vi\/([^/]+)\//);
-    if(match && match[1]) return match[1];
-  } catch(e) {}
-  return null;
+    return data?.items?.[0]?.id?.videoId || null;
+  }catch(e){
+    return null;
+  }
 }
 
 async function openCazePlayer(){
   const player = document.getElementById("cazeMiniplayer");
   const wrap = document.getElementById("cazeIframeWrap");
 
-  // Se já estiver visível, apenas mostra
+  // Se já estiver visível, só garante que aparece
   if(player.classList.contains("visible")){
     player.style.display = "block";
     return;
   }
 
-  // Mostra o player imediatamente com loading
-  player.classList.add("visible");
-
+  // Injeta o iframe na primeira vez (evita carregar o vídeo antes de clicar)
   if(!wrap.querySelector("iframe")){
-    wrap.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;min-height:120px;color:#aaa;font-size:.8rem;gap:8px;"><span style="animation:live-pulse 1s infinite;display:inline-block;width:8px;height:8px;background:#ff3b3b;border-radius:50%;"></span> Carregando live...</div>`;
-
-    const videoId = await fetchCazeLiveVideoId();
-
-    if(videoId){
-      const src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
-      wrap.innerHTML = `<iframe src="${src}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
-    } else {
-      // Fallback: link direto
-      wrap.innerHTML = `
-        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-height:120px;gap:10px;padding:16px;text-align:center;">
-          <div style="color:#ff9999;font-size:.8rem;">Não foi possível carregar o player aqui.<br>Assista direto no YouTube:</div>
-          <a href="https://www.youtube.com/@CazeTV/live" target="_blank"
-             style="background:#ff3b3b;color:#fff;font-weight:800;padding:9px 18px;border-radius:12px;text-decoration:none;font-size:.85rem;">
-            ▶ Abrir Cazé TV
-          </a>
-        </div>`;
-    }
+    let videoId = await getCazeLiveVideoId();
+    const src = videoId
+      ? `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`
+      : `https://www.youtube.com/embed/live_stream?channel=${CAZE_CHANNEL_ID}&autoplay=1&rel=0&modestbranding=1`;
+    wrap.innerHTML = `<iframe src="${src}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
   }
+
+  player.classList.add("visible");
 }
 
 function closeCazePlayer(){
